@@ -1,26 +1,197 @@
 @import "tailwindcss";
 
+@theme {
+  --color-neo-orange: #FF6D29;
+  --color-neo-orange-dark: #cc5520;
+  --color-neo-orange-glow: rgba(255, 109, 41, 0.35);
+  --color-neo-brown: #453027;
+  --color-neo-black: #0d0b0c;
+  --color-neo-dark: #161316;
+  --color-neo-card: #1a1518;
+  --color-neo-border: rgba(255, 109, 41, 0.15);
+  --color-neo-silver: #bababa;
+  --color-neo-muted: #7a7178;
+
+  --font-sans: var(--font-plus-jakarta), system-ui, sans-serif;
+
+  --radius-neo: 12px;
+  --radius-neo-lg: 20px;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0d0b0c;
+  --foreground: #ffffff;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+* {
+  box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Orange glow radial used throughout */
+.glow-top {
+  background: radial-gradient(
+    ellipse 80% 50% at 60% 0%,
+    rgba(255, 109, 41, 0.28) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+.glow-center {
+  background: radial-gradient(
+    ellipse 60% 60% at 50% 50%,
+    rgba(255, 109, 41, 0.2) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+/* Gradient text utility */
+.text-gradient {
+  background: linear-gradient(135deg, #FF6D29 0%, #ff9a6c 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Card glass effect */
+.card-glass {
+  background: rgba(26, 21, 24, 0.8);
+  border: 1px solid rgba(255, 109, 41, 0.12);
+  backdrop-filter: blur(12px);
+}
+
+/* Stat card used in hero */
+.stat-card {
+  background: rgba(22, 19, 22, 0.9);
+  border: 1px solid rgba(255, 109, 41, 0.2);
+  backdrop-filter: blur(16px);
+  border-radius: 14px;
+  padding: 16px 20px;
+}
+
+/* Section label pill */
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #FF6D29;
+  border: 1px solid rgba(255, 109, 41, 0.3);
+  border-radius: 100px;
+  padding: 6px 14px;
+}
+
+/* NEO orange button */
+.btn-neo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #FF6D29;
+  color: #ffffff;
+  font-weight: 600;
+  border-radius: 100px;
+  padding: 14px 28px;
+  font-size: 15px;
+  transition: background 0.2s, transform 0.15s;
+  cursor: pointer;
+  border: none;
+  text-decoration: none;
+}
+
+.btn-neo:hover {
+  background: #cc5520;
+  transform: translateY(-1px);
+}
+
+/* Ghost button */
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  color: #ffffff;
+  font-weight: 600;
+  border-radius: 100px;
+  padding: 14px 28px;
+  font-size: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: border-color 0.2s, background 0.2s;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-ghost:hover {
+  border-color: rgba(255, 109, 41, 0.6);
+  background: rgba(255, 109, 41, 0.08);
+}
+
+/* Input styles */
+.neo-input {
+  width: 100%;
+  background: rgba(22, 19, 22, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 14px 16px;
+  color: #ffffff;
+  font-size: 15px;
+  font-family: inherit;
+  transition: border-color 0.2s;
+  outline: none;
+}
+
+.neo-input:focus {
+  border-color: rgba(255, 109, 41, 0.5);
+}
+
+.neo-input::placeholder {
+  color: #7a7178;
+}
+
+/* Divider with orange glow */
+.neo-divider {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 109, 41, 0.3) 40%,
+    rgba(255, 109, 41, 0.3) 60%,
+    transparent 100%
+  );
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0d0b0c;
+}
+::-webkit-scrollbar-thumb {
+  background: #453027;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #FF6D29;
+}
+
+/* Selection */
+::selection {
+  background: rgba(255, 109, 41, 0.3);
+  color: #ffffff;
 }
