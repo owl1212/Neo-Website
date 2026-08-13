@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { getResellersByProvince } from "@/lib/content";
 
 export const metadata: Metadata = {
@@ -14,13 +15,13 @@ export default async function FindNeoPage() {
   return (
     <div className="pt-20 min-h-screen">
       {/* Hero */}
-      <div className="relative py-20 overflow-hidden">
+      <div className="relative min-h-[700px] flex items-center overflow-hidden">
         <div
           className="absolute inset-0 pointer-events-none"
           style={{ background: "radial-gradient(ellipse 60% 50% at 50% 0%, rgba(255,109,41,0.15) 0%, transparent 60%)" }}
         />
-        <div className="relative max-w-7xl mx-auto px-5 sm:px-8">
-          <div className="max-w-2xl">
+        <div className="relative max-w-7xl mx-auto px-5 sm:px-8 py-20 w-full">
+          <div className="max-w-xl">
             <div className="section-label mb-6">Store Locator</div>
             <h1 className="text-5xl sm:text-6xl font-extrabold text-white leading-tight mb-6">
               Find a NEO
@@ -32,6 +33,15 @@ export default async function FindNeoPage() {
               by province below.
             </p>
           </div>
+        </div>
+        <div className="hidden lg:block absolute w-[1500px] h-[1700px] pointer-events-none" style={{ right: "-40px", bottom: "-200px" }}>
+          <Image
+            src="/images/Locate Reseller.png"
+            alt="Find a NEO Reseller"
+            fill
+            className="object-contain object-bottom"
+            priority
+          />
         </div>
       </div>
 
