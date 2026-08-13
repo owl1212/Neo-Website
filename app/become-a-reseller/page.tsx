@@ -62,7 +62,7 @@ const whatNeoProvides = [
   },
   {
     title: "Financing Partners",
-    desc: "Your customers can access Digitize and HELSB financing options, reducing purchase barriers.",
+    desc: "Your customers can pay over time through Digitize — see the Financing & Community page for details.",
     icon: (
       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
@@ -96,27 +96,32 @@ export default function BecomeAResellerPage() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-5 sm:px-8 pb-24">
-        {/* What NEO provides */}
-        <div className="mb-20">
-          <div className="section-label mb-6">What you get</div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-10">
-            Everything you need to sell NEO.
-          </h2>
+      {/* What NEO provides [LIGHT] */}
+      <section className="bg-[#FAF7F4]">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-20">
+          <div className="text-right mb-10">
+            <div className="section-label inline-flex mb-6">What you get</div>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-[#1a1518]">
+              Everything you need to sell NEO.
+            </h2>
+          </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {whatNeoProvides.map((item) => (
-              <div key={item.title} className="card-glass rounded-[16px] p-6 hover:border-[rgba(255,109,41,0.3)] transition-all duration-300 group">
-                <div className="w-11 h-11 rounded-xl bg-[rgba(255,109,41,0.1)] flex items-center justify-center text-[#FF6D29] mb-5 group-hover:bg-[rgba(255,109,41,0.2)] transition-colors">
+              <div key={item.title} className="card-light rounded-[16px] p-6 hover:border-[rgba(255,109,41,0.3)] transition-all duration-300 group">
+                <div className="w-11 h-11 rounded-xl bg-[rgba(255,109,41,0.08)] flex items-center justify-center text-[#FF6D29] mb-5 group-hover:bg-[rgba(255,109,41,0.15)] transition-colors">
                   {item.icon}
                 </div>
-                <h3 className="font-bold text-white mb-2">{item.title}</h3>
+                <h3 className="font-bold text-[#1a1518] mb-2">{item.title}</h3>
                 <p className="text-sm text-[#7a7178] leading-relaxed">{item.desc}</p>
               </div>
             ))}
           </div>
         </div>
+      </section>
 
-        {/* Requirements + Form */}
+      {/* Requirements + Form [DARK] */}
+      <section className="bg-[#0d0b0c]">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-20">
         <div className="grid lg:grid-cols-5 gap-12">
           {/* Requirements */}
           <div className="lg:col-span-2">
@@ -238,7 +243,8 @@ export default function BecomeAResellerPage() {
             </div>
           </div>
         </div>
-      </div>
+        </div>
+      </section>
     </div>
   );
 }

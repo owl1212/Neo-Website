@@ -50,55 +50,54 @@ export default async function NewsPage() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-5 sm:px-8 pb-24">
-        {posts.length === 0 ? (
-          <div className="text-center py-20">
-            <p className="text-[#7a7178]">No news posts yet. Check back soon.</p>
-          </div>
-        ) : (
-          <div className="grid md:grid-cols-2 gap-6">
-            {posts.map((post, i) => (
-              <article
-                key={post.slug}
-                className={`card-glass rounded-[20px] overflow-hidden hover:border-[rgba(255,109,41,0.3)] transition-all duration-300 flex flex-col ${i === 0 ? "md:col-span-2" : ""}`}
-              >
-                {/* Cover */}
-                <div
-                  className={`${i === 0 ? "h-72" : "h-48"} bg-gradient-to-br from-[#FF6D29]/15 to-[#453027]/20 relative overflow-hidden flex items-end p-6`}
+      {/* Posts [LIGHT] */}
+      <section className="bg-[#FAF7F4]">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-16 pb-24">
+          {posts.length === 0 ? (
+            <div className="text-center py-20">
+              <p className="text-[#7a7178]">No news posts yet. Check back soon.</p>
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 gap-6">
+              {posts.map((post, i) => (
+                <article
+                  key={post.slug}
+                  className={`card-light rounded-[20px] overflow-hidden hover:border-[rgba(255,109,41,0.3)] transition-all duration-300 flex flex-col ${i === 0 ? "md:col-span-2" : ""}`}
                 >
+                  {/* Cover */}
                   <div
-                    className="absolute inset-0"
-                    style={{ background: "radial-gradient(ellipse 80% 60% at 50% 20%, rgba(255,255,255,0.03) 0%, transparent 70%)" }}
-                  />
-                  <span
-                    className={`inline-flex items-center border rounded-full px-3 py-1 text-[11px] font-semibold ${categoryColors[post.category]}`}
+                    className={`${i === 0 ? "h-72" : "h-48"} bg-gradient-to-br from-[#FF6D29]/10 to-[#FAF7F4] relative overflow-hidden flex items-end p-6`}
                   >
-                    {categoryLabels[post.category]}
-                  </span>
-                </div>
-
-                <div className="p-6 flex flex-col flex-1">
-                  <p className="text-xs text-[#7a7178] mb-3">{formatDate(post.date)}</p>
-                  <h2 className={`font-extrabold text-white mb-3 leading-tight ${i === 0 ? "text-2xl sm:text-3xl" : "text-lg"}`}>
-                    {post.title}
-                  </h2>
-                  {post.excerpt && (
-                    <p className="text-sm text-[#bababa] leading-relaxed mb-4">{post.excerpt}</p>
-                  )}
-                  <div className="mt-auto">
-                    <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#FF6D29]">
-                      Read more
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
-                      </svg>
+                    <span
+                      className={`inline-flex items-center border rounded-full px-3 py-1 text-[11px] font-semibold ${categoryColors[post.category]}`}
+                    >
+                      {categoryLabels[post.category]}
                     </span>
                   </div>
-                </div>
-              </article>
-            ))}
-          </div>
-        )}
-      </div>
+
+                  <div className="p-6 flex flex-col flex-1">
+                    <p className="text-xs text-[#7a7178] mb-3">{formatDate(post.date)}</p>
+                    <h2 className={`font-extrabold text-[#1a1518] mb-3 leading-tight ${i === 0 ? "text-2xl sm:text-3xl" : "text-lg"}`}>
+                      {post.title}
+                    </h2>
+                    {post.excerpt && (
+                      <p className="text-sm text-[#4a3f46] leading-relaxed mb-4">{post.excerpt}</p>
+                    )}
+                    <div className="mt-auto">
+                      <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#FF6D29]">
+                        Read more
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+                        </svg>
+                      </span>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
     </div>
   );
 }

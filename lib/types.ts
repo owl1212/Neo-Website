@@ -23,6 +23,7 @@ export type Product = {
   slug: string;
   name: string;
   tagline?: string;
+  description?: string;
   range?: "Fusion" | "Lite" | "Pulse" | "Tab";
   heroImage: NeoImage;
   gallery: NeoImage[];
