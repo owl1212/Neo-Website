@@ -20,6 +20,15 @@ import (
 	"neo-backend/internal/service"
 )
 
+// @title        NEO Backend API
+// @version      1.0
+// @description  Reseller application, contact/warranty submission, and admin endpoints for the NEO Zambia website backend. Product/reseller/news content is managed separately via Directus and is not exposed here.
+// @BasePath     /
+//
+// @securityDefinitions.apikey  BearerAuth
+// @in                          header
+// @name                        Authorization
+// @description                 Type "Bearer" followed by a space and the JWT from POST /api/admin/login, e.g. "Bearer eyJhbGciOi...".
 func main() {
 	// Local dev convenience; in production env vars are set directly and
 	// this is a no-op if .env doesn't exist.
@@ -59,6 +68,12 @@ func main() {
 	mux.HandleFunc("GET /api/reseller-applications", middleware.AdminAuth(cfg.JWTSecret)(resellerHandler.List))
 	mux.HandleFunc("POST /api/contact", contactHandler.Create)
 	mux.HandleFunc("POST /api/admin/login", authHandler.Login)
+
+	mux.HandleFunc("GET /swagger/doc.json", handlers.SwaggerDoc)
+	mux.HandleFunc("GET /swagger/index.html", handlers.SwaggerUI)
+	mux.HandleFunc("GET /swagger/", func(w http.ResponseWriter, r *http.Request) {
+		http.Redirect(w, r, "/swagger/index.html", http.StatusFound)
+	})
 
 	var handler http.Handler = mux
 	handler = middleware.CORS(cfg.FrontendOrigin)(handler)

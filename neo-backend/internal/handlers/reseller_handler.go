@@ -28,6 +28,17 @@ type resellerApplicationRequest struct {
 	Message     string `json:"message"`
 }
 
+// Create godoc
+// @Summary      Submit a reseller application
+// @Description  Public endpoint used by the storefront's "become a reseller" form. Persists the application and triggers a background email notification.
+// @Tags         reseller-applications
+// @Accept       json
+// @Produce      json
+// @Param        request  body      handlers.resellerApplicationRequest  true  "Reseller application"
+// @Success      201      {object}  models.ResellerApplication
+// @Failure      400      {object}  handlers.ErrorResponse
+// @Failure      500      {object}  handlers.ErrorResponse
+// @Router       /api/reseller-applications [post]
 func (h *ResellerHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var req resellerApplicationRequest
 	if err := decodeJSON(w, r, &req); err != nil {
@@ -56,6 +67,16 @@ func (h *ResellerHandler) Create(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusCreated, app)
 }
 
+// List godoc
+// @Summary      List reseller applications
+// @Description  Admin-only endpoint to review submitted reseller applications, newest first.
+// @Tags         reseller-applications
+// @Produce      json
+// @Security     BearerAuth
+// @Success      200  {array}   models.ResellerApplication
+// @Failure      401  {object}  handlers.ErrorResponse
+// @Failure      500  {object}  handlers.ErrorResponse
+// @Router       /api/reseller-applications [get]
 func (h *ResellerHandler) List(w http.ResponseWriter, r *http.Request) {
 	apps, err := h.svc.List(r.Context())
 	if err != nil {

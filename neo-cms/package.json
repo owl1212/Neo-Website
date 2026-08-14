@@ -1,0 +1,11 @@
+{
+  "name": "neo-cms-scripts",
+  "private": true,
+  "version": "1.0.0",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "setup": "node scripts/setup-directus.js"
+  }
+}

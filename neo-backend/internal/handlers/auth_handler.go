@@ -28,6 +28,17 @@ type loginResponse struct {
 	ExpiresAt time.Time `json:"expiresAt"`
 }
 
+// Login godoc
+// @Summary      Admin login
+// @Description  Authenticates against ADMIN_USERNAME/ADMIN_PASSWORD and returns a signed JWT (see JWT_EXPIRY_HOURS for lifetime) for use with admin-only endpoints.
+// @Tags         admin
+// @Accept       json
+// @Produce      json
+// @Param        request  body      handlers.loginRequest  true  "Admin credentials"
+// @Success      200      {object}  handlers.loginResponse
+// @Failure      400      {object}  handlers.ErrorResponse
+// @Failure      401      {object}  handlers.ErrorResponse
+// @Router       /api/admin/login [post]
 func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 	var req loginRequest
 	if err := decodeJSON(w, r, &req); err != nil {

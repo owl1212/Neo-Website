@@ -1,0 +1,207 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "NEO Backend API",
+    "description": "Reseller application, contact/warranty submission, and admin endpoints for the NEO Zambia website backend. Product/reseller/news content is managed separately via Directus and is not exposed here.",
+    "version": "1.0"
+  },
+  "basePath": "/",
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "paths": {
+    "/api/admin/login": {
+      "post": {
+        "tags": ["admin"],
+        "summary": "Admin login",
+        "description": "Authenticates against ADMIN_USERNAME/ADMIN_PASSWORD and returns a signed JWT (see JWT_EXPIRY_HOURS for lifetime) for use with admin-only endpoints.",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "description": "Admin credentials",
+            "schema": { "$ref": "#/definitions/handlers.loginRequest" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": { "$ref": "#/definitions/handlers.loginResponse" }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": { "$ref": "#/definitions/handlers.ErrorResponse" }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": { "$ref": "#/definitions/handlers.ErrorResponse" }
+          }
+        }
+      }
+    },
+    "/api/contact": {
+      "post": {
+        "tags": ["contact"],
+        "summary": "Submit a contact or warranty request",
+        "description": "Public endpoint used by the storefront's contact and warranty forms. Persists the submission and triggers a background email notification.",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "description": "Contact or warranty submission",
+            "schema": { "$ref": "#/definitions/handlers.contactSubmissionRequest" }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": { "$ref": "#/definitions/models.ContactSubmission" }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": { "$ref": "#/definitions/handlers.ErrorResponse" }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": { "$ref": "#/definitions/handlers.ErrorResponse" }
+          }
+        }
+      }
+    },
+    "/api/reseller-applications": {
+      "post": {
+        "tags": ["reseller-applications"],
+        "summary": "Submit a reseller application",
+        "description": "Public endpoint used by the storefront's \"become a reseller\" form. Persists the application and triggers a background email notification.",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "description": "Reseller application",
+            "schema": { "$ref": "#/definitions/handlers.resellerApplicationRequest" }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": { "$ref": "#/definitions/models.ResellerApplication" }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": { "$ref": "#/definitions/handlers.ErrorResponse" }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": { "$ref": "#/definitions/handlers.ErrorResponse" }
+          }
+        }
+      },
+      "get": {
+        "tags": ["reseller-applications"],
+        "summary": "List reseller applications",
+        "description": "Admin-only endpoint to review submitted reseller applications, newest first.",
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": { "$ref": "#/definitions/models.ResellerApplication" }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": { "$ref": "#/definitions/handlers.ErrorResponse" }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": { "$ref": "#/definitions/handlers.ErrorResponse" }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "handlers.ErrorResponse": {
+      "type": "object",
+      "properties": {
+        "error": { "type": "string", "example": "invalid request body" }
+      }
+    },
+    "handlers.loginRequest": {
+      "type": "object",
+      "required": ["username", "password"],
+      "properties": {
+        "username": { "type": "string", "example": "admin" },
+        "password": { "type": "string", "example": "hunter2" }
+      }
+    },
+    "handlers.loginResponse": {
+      "type": "object",
+      "properties": {
+        "token": { "type": "string", "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." },
+        "expiresAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "handlers.contactSubmissionRequest": {
+      "type": "object",
+      "required": ["name", "email", "type", "message"],
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "type": { "type": "string", "enum": ["contact", "warranty"] },
+        "message": { "type": "string" }
+      }
+    },
+    "handlers.resellerApplicationRequest": {
+      "type": "object",
+      "required": ["companyName", "contactName", "email"],
+      "properties": {
+        "companyName": { "type": "string" },
+        "contactName": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "province": { "type": "string" },
+        "message": { "type": "string" }
+      }
+    },
+    "models.ContactSubmission": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "type": { "type": "string", "enum": ["contact", "warranty"] },
+        "message": { "type": "string" },
+        "status": { "type": "string", "example": "new" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "models.ResellerApplication": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "companyName": { "type": "string" },
+        "contactName": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "province": { "type": "string" },
+        "message": { "type": "string" },
+        "status": { "type": "string", "example": "pending" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "BearerAuth": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "Authorization",
+      "description": "Type \"Bearer\" followed by a space and the JWT from POST /api/admin/login, e.g. \"Bearer eyJhbGciOi...\"."
+    }
+  }
+}
