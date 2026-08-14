@@ -3,7 +3,7 @@ package models
 import "time"
 
 // ContactSubmission mirrors the contact_submissions table.
-// Type is either "contact" or "warranty".
+// Type is one of "warranty", "reseller", "product", "other".
 type ContactSubmission struct {
 	ID        int       `json:"id"`
 	Name      string    `json:"name"`

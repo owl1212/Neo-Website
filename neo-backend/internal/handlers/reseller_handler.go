@@ -20,12 +20,14 @@ func NewResellerHandler(svc service.ResellerService) *ResellerHandler {
 }
 
 type resellerApplicationRequest struct {
-	CompanyName string `json:"companyName"`
-	ContactName string `json:"contactName"`
-	Email       string `json:"email"`
-	Phone       string `json:"phone"`
-	Province    string `json:"province"`
-	Message     string `json:"message"`
+	CompanyName  string `json:"companyName"`
+	ContactName  string `json:"contactName"`
+	Email        string `json:"email"`
+	Phone        string `json:"phone"`
+	Province     string `json:"province"`
+	Town         string `json:"town"`
+	BusinessType string `json:"businessType"`
+	Message      string `json:"message"`
 }
 
 // Create godoc
@@ -47,12 +49,14 @@ func (h *ResellerHandler) Create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	app := &models.ResellerApplication{
-		CompanyName: req.CompanyName,
-		ContactName: req.ContactName,
-		Email:       req.Email,
-		Phone:       req.Phone,
-		Province:    req.Province,
-		Message:     req.Message,
+		CompanyName:  req.CompanyName,
+		ContactName:  req.ContactName,
+		Email:        req.Email,
+		Phone:        req.Phone,
+		Province:     req.Province,
+		Town:         req.Town,
+		BusinessType: req.BusinessType,
+		Message:      req.Message,
 	}
 
 	if err := h.svc.Submit(r.Context(), app); err != nil {

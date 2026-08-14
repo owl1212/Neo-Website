@@ -24,12 +24,12 @@ func NewResellerRepository(db *sql.DB) ResellerRepository {
 
 func (r *pgResellerRepository) Create(ctx context.Context, app *models.ResellerApplication) error {
 	const q = `
-		INSERT INTO reseller_applications (company_name, contact_name, email, phone, province, message)
-		VALUES ($1, $2, $3, $4, $5, $6)
+		INSERT INTO reseller_applications (company_name, contact_name, email, phone, province, town, business_type, message)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
 		RETURNING id, status, created_at
 	`
 	err := r.db.QueryRowContext(ctx, q,
-		app.CompanyName, app.ContactName, app.Email, app.Phone, app.Province, app.Message,
+		app.CompanyName, app.ContactName, app.Email, app.Phone, app.Province, app.Town, app.BusinessType, app.Message,
 	).Scan(&app.ID, &app.Status, &app.CreatedAt)
 	if err != nil {
 		return fmt.Errorf("reseller_repository: create: %w", err)
@@ -39,7 +39,7 @@ func (r *pgResellerRepository) Create(ctx context.Context, app *models.ResellerA
 
 func (r *pgResellerRepository) List(ctx context.Context) ([]models.ResellerApplication, error) {
 	const q = `
-		SELECT id, company_name, contact_name, email, phone, province, message, status, created_at
+		SELECT id, company_name, contact_name, email, phone, province, town, business_type, message, status, created_at
 		FROM reseller_applications
 		ORDER BY created_at DESC
 	`
@@ -52,12 +52,14 @@ func (r *pgResellerRepository) List(ctx context.Context) ([]models.ResellerAppli
 	apps := []models.ResellerApplication{}
 	for rows.Next() {
 		var a models.ResellerApplication
-		var phone, province, message sql.NullString
-		if err := rows.Scan(&a.ID, &a.CompanyName, &a.ContactName, &a.Email, &phone, &province, &message, &a.Status, &a.CreatedAt); err != nil {
+		var phone, province, town, businessType, message sql.NullString
+		if err := rows.Scan(&a.ID, &a.CompanyName, &a.ContactName, &a.Email, &phone, &province, &town, &businessType, &message, &a.Status, &a.CreatedAt); err != nil {
 			return nil, fmt.Errorf("reseller_repository: scan: %w", err)
 		}
 		a.Phone = phone.String
 		a.Province = province.String
+		a.Town = town.String
+		a.BusinessType = businessType.String
 		a.Message = message.String
 		apps = append(apps, a)
 	}

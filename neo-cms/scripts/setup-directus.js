@@ -6,7 +6,7 @@
  *
  * - Creates the products / resellers / news_posts collections (if missing)
  * - Imports the existing data/*.ts content into them
- * - Grants the "public" role read access, filtered to the same
+ * - Grants the Public policy read access, filtered to the same
  *   status/state used by lib/content.ts today (published / active)
  *
  * Usage:
@@ -340,29 +340,61 @@ async function importNews() {
 }
 
 // ---------------------------------------------------------------------------
-// Public role read permissions — mirrors the status filters in lib/content.ts
+// Public read permissions — mirrors the status filters in lib/content.ts
+//
+// Directus 10.10+ (confirmed here against a live v12.2.0 instance) replaced
+// role-based permissions with Policies: directus_permissions now has a
+// `policy` column instead of `role`, and a `directus_access` junction table
+// links policies to roles/users. Unauthenticated ("Public") access is
+// whichever policy is linked via an access row where both `role` and `user`
+// are null — there's no fixed/reserved id for it, a fresh instance gets its
+// own randomly-generated policy id, so it has to be discovered at runtime
+// rather than hardcoded.
 // ---------------------------------------------------------------------------
-async function findPublicReadPermission(collection) {
+async function findPublicPolicyId() {
+  const { data } = await directus(
+    "GET",
+    withQuery("/access", {
+      filter: { role: { _null: true }, user: { _null: true } },
+      limit: 1,
+      fields: "policy",
+    })
+  );
+  const row = data[0];
+  if (!row) {
+    throw new Error(
+      "Could not find a Public access policy (a directus_access row with role=null and user=null). " +
+        "Every Directus instance ships with one by default — if it's been deleted, recreate it via " +
+        "Settings > Access Policies > Public in the Admin UI first."
+    );
+  }
+  // `policy` comes back as a bare id, unless the caller also asked for
+  // nested fields on it (we only asked for "policy"), in which case handle
+  // both shapes defensively.
+  return typeof row.policy === "object" ? row.policy.id : row.policy;
+}
+
+async function findPermission(policyId, collection, action) {
   const { data } = await directus(
     "GET",
     withQuery("/permissions", {
-      filter: { collection: { _eq: collection }, action: { _eq: "read" }, role: { _null: true } },
+      filter: { policy: { _eq: policyId }, collection: { _eq: collection }, action: { _eq: action } },
       limit: 1,
     })
   );
   return data[0] || null;
 }
 
-async function ensurePublicReadPermission(collection, statusField, statusValue) {
+async function ensurePublicReadPermission(policyId, collection, statusField, statusValue) {
   const body = {
-    role: null,
+    policy: policyId,
     collection,
     action: "read",
     permissions: { [statusField]: { _eq: statusValue } },
     fields: ["*"],
   };
 
-  const existing = await findPublicReadPermission(collection);
+  const existing = await findPermission(policyId, collection, "read");
   if (existing) {
     await directus("PATCH", `/permissions/${existing.id}`, body);
     console.log(`  updated public read permission for "${collection}" (${statusField} = ${statusValue})`);
@@ -385,9 +417,11 @@ async function main() {
   await importNews();
 
   console.log("\n--- Setting public read permissions ---");
-  await ensurePublicReadPermission("products", "status", "published");
-  await ensurePublicReadPermission("resellers", "status", "active");
-  await ensurePublicReadPermission("news_posts", "status", "published");
+  const publicPolicyId = await findPublicPolicyId();
+  console.log(`  found Public policy: ${publicPolicyId}`);
+  await ensurePublicReadPermission(publicPolicyId, "products", "status", "published");
+  await ensurePublicReadPermission(publicPolicyId, "resellers", "status", "active");
+  await ensurePublicReadPermission(publicPolicyId, "news_posts", "status", "published");
 
   console.log("\nDone.");
 }

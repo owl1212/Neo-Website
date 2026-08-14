@@ -12,6 +12,13 @@ import (
 	"neo-backend/internal/repository"
 )
 
+var validContactTypes = map[string]bool{
+	"warranty": true,
+	"reseller": true,
+	"product":  true,
+	"other":    true,
+}
+
 // ContactService validates and processes contact/warranty submissions.
 type ContactService interface {
 	Submit(ctx context.Context, sub *models.ContactSubmission) error
@@ -39,8 +46,8 @@ func (s *contactService) Submit(ctx context.Context, sub *models.ContactSubmissi
 	if _, err := mail.ParseAddress(sub.Email); err != nil {
 		return fmt.Errorf("%w: email is invalid", ErrValidation)
 	}
-	if sub.Type != "contact" && sub.Type != "warranty" {
-		return fmt.Errorf(`%w: type must be "contact" or "warranty"`, ErrValidation)
+	if !validContactTypes[sub.Type] {
+		return fmt.Errorf(`%w: type must be one of "warranty", "reseller", "product", "other"`, ErrValidation)
 	}
 	if sub.Message == "" {
 		return fmt.Errorf("%w: message is required", ErrValidation)

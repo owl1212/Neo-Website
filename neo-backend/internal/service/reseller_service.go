@@ -33,6 +33,8 @@ func (s *resellerService) Submit(ctx context.Context, app *models.ResellerApplic
 	app.Email = strings.TrimSpace(app.Email)
 	app.Phone = strings.TrimSpace(app.Phone)
 	app.Province = strings.TrimSpace(app.Province)
+	app.Town = strings.TrimSpace(app.Town)
+	app.BusinessType = strings.TrimSpace(app.BusinessType)
 	app.Message = strings.TrimSpace(app.Message)
 
 	if app.CompanyName == "" {

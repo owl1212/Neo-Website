@@ -152,7 +152,7 @@
         "name": { "type": "string" },
         "email": { "type": "string" },
         "phone": { "type": "string" },
-        "type": { "type": "string", "enum": ["contact", "warranty"] },
+        "type": { "type": "string", "enum": ["warranty", "reseller", "product", "other"] },
         "message": { "type": "string" }
       }
     },
@@ -165,6 +165,8 @@
         "email": { "type": "string" },
         "phone": { "type": "string" },
         "province": { "type": "string" },
+        "town": { "type": "string" },
+        "businessType": { "type": "string" },
         "message": { "type": "string" }
       }
     },
@@ -175,7 +177,7 @@
         "name": { "type": "string" },
         "email": { "type": "string" },
         "phone": { "type": "string" },
-        "type": { "type": "string", "enum": ["contact", "warranty"] },
+        "type": { "type": "string", "enum": ["warranty", "reseller", "product", "other"] },
         "message": { "type": "string" },
         "status": { "type": "string", "example": "new" },
         "createdAt": { "type": "string", "format": "date-time" }
@@ -190,6 +192,8 @@
         "email": { "type": "string" },
         "phone": { "type": "string" },
         "province": { "type": "string" },
+        "town": { "type": "string" },
+        "businessType": { "type": "string" },
         "message": { "type": "string" },
         "status": { "type": "string", "example": "pending" },
         "createdAt": { "type": "string", "format": "date-time" }
