@@ -19,6 +19,8 @@ services:
     depends_on:
       - directus-db
     environment:
+      CORS_ENABLED: "true"
+      CORS_ORIGIN: "http://localhost:3000"
       KEY: "iY9UjfUesgCR38L1cr0+pWC6b2dgNzeQ4KlYLPL6ihA="
       SECRET: "6UxPBeMKRpiGENhcqd0x+qYt0qK/4ZC5iTVkgVUuwgA="
       DB_CLIENT: "pg"
