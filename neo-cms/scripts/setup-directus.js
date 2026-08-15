@@ -45,7 +45,13 @@ const DATA_DIR = path.join(__dirname, "..", "..", "data");
 // compiler for a one-time script.
 // ---------------------------------------------------------------------------
 function loadTsArrayExport(filePath, exportName) {
-  const src = fs.readFileSync(filePath, "utf8");
+  // Strip a leading UTF-8 BOM first — Node's readFileSync("utf8") keeps it
+  // as a literal U+FEFF character, which shifts "import" off the start of
+  // the line and makes the regex below miss it entirely, leaving a real
+  // `import` statement in the CommonJS eval below ("Cannot use import
+  // statement outside a module"). Some Windows editors add this on save.
+  const raw = fs.readFileSync(filePath, "utf8");
+  const src = raw.charCodeAt(0) === 0xfeff ? raw.slice(1) : raw;
   const withoutImports = src.replace(/^import[^\n]*\n/gm, "");
 
   const typedExport = new RegExp(`export const ${exportName}\\s*:[^=]+=`);

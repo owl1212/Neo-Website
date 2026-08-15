@@ -11,7 +11,7 @@
 // same "nothing here" shape they already handle when a slug doesn't
 // exist or a collection is empty.
 
-import type { Product, Reseller, NewsPost } from "@/lib/types";
+import type { NeoImage, Product, Reseller, NewsPost } from "@/lib/types";
 
 const DIRECTUS_URL = (process.env.DIRECTUS_URL ?? "http://localhost:8055").replace(/\/+$/, "");
 
@@ -22,17 +22,55 @@ const REVALIDATE_SECONDS = 60;
 
 type DirectusResponse<T> = { data: T };
 
+// A Directus File, deep-fetched only for the sub-fields we actually use.
+// `title`/`description` double as alt text — set them in the Files
+// library when uploading, no separate alt-text field needed.
+type DirectusFileRef = {
+  id: string;
+  title: string | null;
+  description: string | null;
+};
+
+// Directus only expands a relation into the requested nested object when
+// the requester can read the *related* collection (directus_files) —
+// that's a separate permission from reading `products` itself. Without
+// it, the field still comes back, just collapsed to the bare foreign-key
+// string instead of { id, title, description }. mapFileToImage below
+// handles both shapes so a missing permission degrades to "no alt text"
+// instead of a broken image.
+type DirectusFileRelation = DirectusFileRef | string | null;
+
+type DirectusGalleryLink = {
+  sort: number | null;
+  directus_files_id: DirectusFileRelation;
+};
+
+// hero_image_file / gallery_files / spec_sheet_pdf_file are native
+// Directus File fields (see neo-cms/scripts/migrate-product-files.js) —
+// asset URLs are built from the file id via assetUrl(), not stored as
+// paths. The old hero_image/gallery/spec_sheet_pdf JSON fields still
+// exist in Directus post-migration but are no longer read here.
 type DirectusProduct = {
   slug: string;
   name: string;
   tagline: string | null;
   range: string | null;
-  hero_image: Product["heroImage"] | null;
-  gallery: Product["gallery"] | null;
+  hero_image_file: DirectusFileRelation;
+  gallery_files: DirectusGalleryLink[] | null;
   spec_groups: Product["specGroups"] | null;
-  spec_sheet_pdf: Product["specSheetPdf"] | null;
+  spec_sheet_pdf_file: DirectusFileRelation;
   status: Product["status"];
 };
+
+// Fields requested for both getProducts and getProduct — deep-fetches the
+// nested file relations, since Directus only returns the raw id for a
+// relation unless you ask for its sub-fields explicitly.
+const PRODUCT_FIELDS =
+  "*," +
+  "hero_image_file.id,hero_image_file.title,hero_image_file.description," +
+  "spec_sheet_pdf_file.id," +
+  "gallery_files.sort,gallery_files.directus_files_id.id," +
+  "gallery_files.directus_files_id.title,gallery_files.directus_files_id.description";
 
 type DirectusReseller = {
   id: string;
@@ -74,16 +112,41 @@ async function directusFetch<T>(path: string): Promise<T[]> {
   }
 }
 
+function assetUrl(fileId: string): string {
+  return `${DIRECTUS_URL}/assets/${fileId}`;
+}
+
+function fileId(file: DirectusFileRelation): string | null {
+  if (!file) return null;
+  return typeof file === "string" ? file : file.id;
+}
+
+function mapFileToImage(file: DirectusFileRelation, altFallback: string): NeoImage | undefined {
+  if (!file) return undefined;
+  const id = typeof file === "string" ? file : file.id;
+  const alt = typeof file === "string" ? altFallback : file.title ?? file.description ?? altFallback;
+  return { src: assetUrl(id), alt };
+}
+
 function mapProduct(raw: DirectusProduct): Product {
+  const gallery = [...(raw.gallery_files ?? [])]
+    .sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0))
+    .map((link) => mapFileToImage(link.directus_files_id, raw.name))
+    .filter((img): img is NeoImage => img !== undefined);
+
   return {
     slug: raw.slug,
     name: raw.name,
     tagline: raw.tagline ?? undefined,
     range: (raw.range as Product["range"]) ?? undefined,
-    heroImage: raw.hero_image as Product["heroImage"],
-    gallery: raw.gallery ?? [],
+    // hero_image_file is a required field going forward — null here means
+    // this product hasn't been through migrate-product-files.js yet.
+    heroImage: mapFileToImage(raw.hero_image_file, raw.name) ?? { src: "", alt: raw.name },
+    gallery,
     specGroups: raw.spec_groups ?? [],
-    specSheetPdf: raw.spec_sheet_pdf ?? undefined,
+    specSheetPdf: fileId(raw.spec_sheet_pdf_file)
+      ? { src: assetUrl(fileId(raw.spec_sheet_pdf_file)!), label: "Download Spec Sheet" }
+      : undefined,
     status: raw.status,
   };
 }
@@ -116,13 +179,16 @@ function mapNewsPost(raw: DirectusNewsPost): NewsPost {
 }
 
 export async function getProducts(): Promise<Product[]> {
-  const raw = await directusFetch<DirectusProduct>("/items/products?filter[status][_eq]=published");
+  const raw = await directusFetch<DirectusProduct>(
+    `/items/products?filter[status][_eq]=published&fields=${encodeURIComponent(PRODUCT_FIELDS)}`
+  );
   return raw.map(mapProduct);
 }
 
 export async function getProduct(slug: string): Promise<Product | null> {
   const raw = await directusFetch<DirectusProduct>(
-    `/items/products?filter[slug][_eq]=${encodeURIComponent(slug)}&filter[status][_eq]=published&limit=1`
+    `/items/products?filter[slug][_eq]=${encodeURIComponent(slug)}&filter[status][_eq]=published&limit=1` +
+      `&fields=${encodeURIComponent(PRODUCT_FIELDS)}`
   );
   return raw[0] ? mapProduct(raw[0]) : null;
 }

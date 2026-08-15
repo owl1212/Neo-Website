@@ -7,6 +7,7 @@
   },
   "scripts": {
     "setup": "node scripts/setup-directus.js",
-    "fix-image-paths": "node scripts/fix-product-image-paths.js"
+    "fix-image-paths": "node scripts/fix-product-image-paths.js",
+    "migrate-product-files": "node scripts/migrate-product-files.js"
   }
 }
