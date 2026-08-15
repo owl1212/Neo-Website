@@ -11,17 +11,17 @@ const partners = [
     name: "Digitize Zambia",
     category: "Financing",
     logo: "DZ",
-    desc: "[Copy pending from NEO — Digitize Zambia partnership details and financing terms to be supplied.]",
-    callout: "Flexible device financing for NEO customers through the Digitize Zambia initiative.",
-    status: "copy-pending" as const,
+    desc: "Through Digitize, your customers can spread the cost of their NEO device over time — no need to pay everything upfront. Enquire at your nearest NEO reseller for current plans and eligibility.",
+    callout: "Pay over time for your NEO device through Digitize.",
+    status: "live" as const,
   },
   {
     name: "HELSB",
     category: "Financing",
     logo: "HL",
-    desc: "[Copy pending from NEO — HELSB financing programme details and eligibility to be supplied.]",
-    callout: "Higher Education Loans and Scholarships Board financing available for qualifying NEO customers.",
-    status: "copy-pending" as const,
+    desc: "The Higher Education Loans and Scholarships Board supports Zambian students with financing options that can extend to device purchases. If you are enrolled in a qualifying institution, ask your reseller about HELSB eligibility.",
+    callout: "Student financing available for qualifying NEO customers through HELSB.",
+    status: "live" as const,
   },
   {
     name: "BongoHive",
@@ -74,34 +74,29 @@ export default function FinancingCommunityPage() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-5 sm:px-8 pb-24">
-        {/* Financing section */}
-        <div className="mb-16">
+      {/* Financing [LIGHT] */}
+      <section className="bg-[#FAF7F4]">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-20">
           <div className="section-label mb-6">Financing options</div>
-          <h2 className="text-3xl font-extrabold text-white mb-10">
+          <h2 className="text-3xl font-extrabold text-[#1a1518] mb-10">
             {"Don't"} pay it all upfront.
           </h2>
           <div className="grid sm:grid-cols-2 gap-6">
             {partners.filter((p) => p.category === "Financing").map((partner) => (
-              <div key={partner.name} className="card-glass rounded-[20px] overflow-hidden">
+              <div key={partner.name} className="card-light rounded-[20px] overflow-hidden">
                 <div className="p-6 flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-[rgba(255,109,41,0.15)] flex items-center justify-center text-sm font-extrabold text-[#FF6D29] shrink-0">
+                  <div className="w-12 h-12 rounded-xl bg-[rgba(255,109,41,0.1)] flex items-center justify-center text-sm font-extrabold text-[#FF6D29] shrink-0">
                     {partner.logo}
                   </div>
                   <div>
                     <div className="flex items-center gap-2 mb-1">
-                      <h3 className="font-bold text-white">{partner.name}</h3>
-                      {partner.status === "copy-pending" && (
-                        <span className="text-[10px] font-semibold text-[#7a7178] bg-white/5 border border-white/10 px-2 py-0.5 rounded-full">
-                          Details coming soon
-                        </span>
-                      )}
+                      <h3 className="font-bold text-[#1a1518]">{partner.name}</h3>
                     </div>
                     <p className="text-sm text-[#7a7178] leading-relaxed">{partner.callout}</p>
                   </div>
                 </div>
                 <div className="px-6 pb-6">
-                  <div className="bg-white/[0.03] rounded-xl p-4 border border-white/5">
+                  <div className="bg-black/[0.03] rounded-xl p-4 border border-black/5">
                     <p className="text-xs text-[#7a7178] italic leading-relaxed">{partner.desc}</p>
                   </div>
                 </div>
@@ -109,19 +104,21 @@ export default function FinancingCommunityPage() {
             ))}
           </div>
         </div>
+      </section>
 
-        <div className="neo-divider mb-16" />
-
-        {/* CSR Partners */}
-        <div>
-          <div className="section-label mb-6">Community partnerships</div>
-          <h2 className="text-3xl font-extrabold text-white mb-4">
-            Investing in {"Zambia's"} future.
-          </h2>
-          <p className="text-[#bababa] max-w-xl mb-10">
-            NEO believes a truly Zambian brand must invest in Zambian communities. These
-            partnerships reflect our commitment beyond the sale.
-          </p>
+      {/* CSR Partners [DARK] */}
+      <section className="bg-[#0d0b0c]">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-20">
+          <div className="text-right mb-10">
+            <div className="section-label inline-flex mb-6">Community partnerships</div>
+            <h2 className="text-3xl font-extrabold text-white mb-4">
+              Investing in {"Zambia's"} future.
+            </h2>
+            <p className="text-[#bababa] max-w-xl ml-auto">
+              NEO believes a truly Zambian brand must invest in Zambian communities. These
+              partnerships reflect our commitment beyond the sale.
+            </p>
+          </div>
           <div className="grid md:grid-cols-3 gap-6">
             {partners.filter((p) => p.category !== "Financing").map((partner) => (
               <div key={partner.name} className="card-glass rounded-[20px] p-6 hover:border-[rgba(255,109,41,0.3)] transition-all duration-300">
@@ -141,9 +138,11 @@ export default function FinancingCommunityPage() {
             ))}
           </div>
         </div>
+      </section>
 
-        {/* Bottom CTA */}
-        <div className="mt-16 text-center">
+      {/* Bottom CTA [LIGHT] */}
+      <section className="bg-[#FAF7F4]">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-16 text-center">
           <p className="text-[#7a7178] text-sm mb-6">
             Interested in partnering with NEO? {"We'd"} love to hear from you.
           </p>
@@ -154,7 +153,7 @@ export default function FinancingCommunityPage() {
             </svg>
           </Link>
         </div>
-      </div>
+      </section>
     </div>
   );
 }

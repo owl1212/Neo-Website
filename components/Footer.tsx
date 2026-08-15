@@ -42,6 +42,8 @@ export default function Footer() {
             <p className="text-sm text-[#7a7178] leading-relaxed max-w-xs">
               Built For You. Proudly Zambian.
               <br />
+              Empowering Digital Growth.
+              <br />
               Laptops, tablets, and PCs designed for Zambia, by Zambians.
             </p>
             <div className="mt-6 flex gap-3">

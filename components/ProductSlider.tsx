@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ProductImage } from "./ProductImage";
 import type { Product } from "@/lib/types";
@@ -15,9 +15,23 @@ const rangeAccents: Record<string, string> = {
 export function ProductSlider({ products }: { products: Product[] }) {
   const [active, setActive] = useState(0);
   const [fading, setFading] = useState(false);
+  const [paused, setPaused] = useState(false);
+
+  useEffect(() => {
+    if (paused) return;
+    const id = setInterval(() => {
+      setFading(true);
+      setTimeout(() => {
+        setActive((prev) => (prev + 1) % products.length);
+        setFading(false);
+      }, 180);
+    }, 5000);
+    return () => clearInterval(id);
+  }, [paused, products.length]);
 
   function switchTo(i: number) {
     if (i === active) return;
+    setPaused(true);
     setFading(true);
     setTimeout(() => {
       setActive(i);
@@ -36,7 +50,7 @@ export function ProductSlider({ products }: { products: Product[] }) {
   ].filter(Boolean) as { label: string; value: string }[];
 
   return (
-    <div>
+    <div onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
       {/* Slide */}
       <div
         className="grid lg:grid-cols-2 gap-10 xl:gap-16 items-center"

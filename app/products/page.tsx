@@ -1,148 +1,242 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { getProducts } from "@/lib/content";
 import type { Product } from "@/lib/types";
+import { FadeIn } from "@/components/FadeIn";
 
 export const metadata: Metadata = {
   title: "Products",
   description: "Browse the full NEO range — 6 devices built for Zambian life. Verified specs, no pricing.",
 };
 
-const rangeColors: Record<string, { bg: string; text: string; border: string }> = {
-  Fusion: { bg: "from-[#FF6D29]/25 to-[#FF6D29]/5", text: "text-[#FF6D29]", border: "border-[rgba(255,109,41,0.2)]" },
-  Lite: { bg: "from-[#6b9fff]/25 to-[#6b9fff]/5", text: "text-[#6b9fff]", border: "border-[rgba(107,159,255,0.2)]" },
-  Pulse: { bg: "from-[#a855f7]/25 to-[#a855f7]/5", text: "text-[#a855f7]", border: "border-[rgba(168,85,247,0.2)]" },
-  Tab: { bg: "from-[#22d3ee]/25 to-[#22d3ee]/5", text: "text-[#22d3ee]", border: "border-[rgba(34,211,238,0.2)]" },
+// ── Set this to your YouTube video ID once uploaded (e.g. "dQw4w9WgXcQ") ──────
+const HERO_VIDEO_ID = "";
+
+const rangeAccents: Record<string, string> = {
+  Fusion: "#FF6D29",
+  Lite: "#6b9fff",
+  Pulse: "#a855f7",
+  Tab: "#22d3ee",
 };
 
-function ProductCard({ product }: { product: Product }) {
-  const colors = rangeColors[product.range ?? "Fusion"] ?? rangeColors.Fusion;
-  const displaySpec = product.specGroups.find((g) => g.label === "Display")?.specs[0]?.value;
-  const batterySpec = product.specGroups.find((g) => g.label === "Battery")?.specs[0]?.value;
-  const cameraSpec = product.specGroups.find((g) => g.label === "Camera")?.specs[0]?.value;
-  const ramSpec = product.specGroups.find((g) => g.label === "Performance")?.specs.find((s) => s.label === "RAM")?.value;
-
-  return (
-    <Link
-      href={`/products/${product.slug}`}
-      className={`group card-glass rounded-[20px] overflow-hidden hover:border-[rgba(255,109,41,0.35)] transition-all duration-300 flex flex-col`}
-    >
-      {/* Image area */}
-      <div
-        className={`h-64 bg-gradient-to-br ${colors.bg} flex items-center justify-center relative overflow-hidden`}
-      >
-        <div
-          className="absolute inset-0"
-          style={{
-            background: "radial-gradient(ellipse 70% 70% at 50% 30%, rgba(255,255,255,0.05) 0%, transparent 70%)",
-          }}
-        />
-        {/* Range badge */}
-        <div className={`absolute top-4 left-4 px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase ${colors.text} border ${colors.border} bg-[#0d0b0c]/60 backdrop-blur-sm`}>
-          {product.range}
-        </div>
-        {/* Arrow */}
-        <div className="absolute top-4 right-4 w-8 h-8 rounded-full bg-[#0d0b0c]/60 backdrop-blur-sm border border-white/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-          <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
-          </svg>
-        </div>
-        {/* Device name watermark */}
-        <span className="text-5xl font-extrabold text-white/8 select-none group-hover:text-white/12 transition-colors text-center px-4">
-          {product.name}
-        </span>
-        {/* Camera notch detail */}
-        <div className="absolute top-3 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-white/15" />
-      </div>
-
-      {/* Info */}
-      <div className="p-6 flex flex-col flex-1">
-        <div className="mb-3">
-          <h3 className="text-2xl font-bold text-white mb-1">{product.name}</h3>
-          {product.tagline && <p className="text-sm text-[#7a7178]">{product.tagline}</p>}
-        </div>
-
-        {/* Key specs */}
-        <div className="grid grid-cols-2 gap-2 mt-auto pt-4 border-t border-white/5">
-          {[
-            { label: "Display", value: displaySpec },
-            { label: "Battery", value: batterySpec },
-            { label: "Camera", value: cameraSpec?.split(",")[0] },
-            { label: "RAM", value: ramSpec },
-          ].filter((s) => s.value).map((spec) => (
-            <div key={spec.label} className="bg-white/[0.03] rounded-lg p-2.5">
-              <p className="text-[10px] font-semibold tracking-wide uppercase text-[#7a7178] mb-0.5">{spec.label}</p>
-              <p className="text-xs text-white font-medium leading-tight">{spec.value}</p>
-            </div>
-          ))}
-        </div>
-
-        <div className={`mt-4 flex items-center gap-2 text-sm font-semibold ${colors.text}`}>
-          View full specs
-          <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
-          </svg>
-        </div>
-      </div>
-    </Link>
-  );
+function getKeySpecs(product: Product) {
+  return [
+    product.specGroups.find((g) => g.label === "Display")?.specs[0],
+    product.specGroups.find((g) => g.label === "Performance")?.specs.find((s) => s.label === "Processor"),
+    product.specGroups.find((g) => g.label === "Performance")?.specs.find((s) => s.label === "RAM"),
+    product.specGroups.find((g) => g.label === "General")?.specs.find(
+      (s) => s.label === "OS" || s.label === "Battery"
+    ),
+  ].filter(Boolean) as { label: string; value: string }[];
 }
 
 export default async function ProductsPage() {
   const products = await getProducts();
-  const ranges = ["Fusion", "Lite", "Pulse", "Tab"] as const;
 
   return (
-    <div className="pt-20">
-      {/* Header */}
-      <div className="relative py-20 overflow-hidden">
+    <div className="overflow-hidden">
+
+      {/* ══════════════════════════════════════════════════════
+          HERO — full-screen video, no overlay text
+          ══════════════════════════════════════════════════════ */}
+      <section className="relative h-screen overflow-hidden bg-[#0d0b0c]">
+        <video
+          src="/videos/fusion-a5.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        {/* Bottom fade */}
+        <div
+          className="absolute bottom-0 left-0 right-0 h-40 pointer-events-none"
+          style={{ background: "linear-gradient(to top, #0d0b0c 0%, transparent 100%)" }}
+        />
+        {/* Scroll cue */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50">
+          <div className="w-px h-10 bg-gradient-to-b from-[#FF6D29] to-transparent" />
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════
+          RANGE INTRO — heading + subtitle  [DARK]
+          ══════════════════════════════════════════════════════ */}
+      <section className="relative py-20 bg-[#0d0b0c]">
         <div
           className="absolute inset-0 pointer-events-none"
-          style={{ background: "radial-gradient(ellipse 70% 60% at 50% 0%, rgba(255,109,41,0.18) 0%, transparent 60%)" }}
+          style={{ background: "radial-gradient(ellipse 60% 50% at 50% 0%, rgba(255,109,41,0.10) 0%, transparent 60%)" }}
         />
         <div className="relative max-w-7xl mx-auto px-5 sm:px-8 text-center">
-          <div className="section-label mx-auto w-fit mb-6">The Full Range</div>
-          <h1 className="text-5xl sm:text-6xl font-extrabold text-white mb-4">
-            Every device. Every need.
-          </h1>
-          <p className="text-lg text-[#bababa] max-w-xl mx-auto">
-            Six smartphones and tablets built for Zambian life. Tap any device for verified
-            specs and a downloadable spec sheet.
-          </p>
+          <FadeIn>
+            <div className="section-label mx-auto w-fit mb-6">The Full Range</div>
+            <h1 className="text-5xl sm:text-6xl xl:text-7xl font-extrabold text-white leading-tight mb-6">
+              Six products.
+              <br />
+              <span className="text-gradient">Three collections.</span>
+            </h1>
+            <p className="text-lg text-[#bababa] max-w-xl mx-auto">
+              Every NEO device built and verified for Zambian life. Scroll to explore each one.
+            </p>
+          </FadeIn>
         </div>
-      </div>
+      </section>
 
-      {/* Grid */}
-      <div className="max-w-7xl mx-auto px-5 sm:px-8 pb-24">
-        {/* Range filter tabs (display only — all show) */}
-        <div className="flex flex-wrap gap-2 mb-10">
-          <span className="px-4 py-2 rounded-full text-sm font-semibold bg-[#FF6D29] text-white">All</span>
-          {ranges.map((r) => (
-            <span key={r} className={`px-4 py-2 rounded-full text-sm font-semibold border ${rangeColors[r].border} ${rangeColors[r].text} opacity-60`}>
-              {r}
-            </span>
-          ))}
-        </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {products.map((p) => <ProductCard key={p.slug} product={p} />)}
-        </div>
+      {/* ══════════════════════════════════════════════════════
+          PRODUCT SECTIONS — one per device, alternating layout
+          ══════════════════════════════════════════════════════ */}
+      {products.map((product, i) => {
+        const accent = rangeAccents[product.range ?? "Fusion"] ?? "#FF6D29";
+        const keySpecs = getKeySpecs(product);
+        const imageLeft = i % 2 === 0;
 
-        {/* Reseller hook */}
-        <div className="mt-16 card-glass rounded-[20px] p-8 flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div>
-            <p className="text-xs font-semibold tracking-widest uppercase text-[#FF6D29] mb-2">For resellers</p>
-            <h3 className="text-xl font-bold text-white mb-1">Interested in stocking these devices?</h3>
-            <p className="text-sm text-[#7a7178]">Apply to become an official NEO reseller — free, fast, and open to all businesses.</p>
+        return (
+          <section
+            key={product.slug}
+            className="relative bg-[#0d0b0c] border-t border-white/[0.04] overflow-hidden"
+          >
+            {/* Ambient glow */}
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background: `radial-gradient(ellipse 50% 70% at ${imageLeft ? "25%" : "75%"} 50%, ${accent}12 0%, transparent 55%)`,
+              }}
+            />
+
+            <div className="relative max-w-7xl mx-auto px-5 sm:px-8">
+              <div
+                className={`grid lg:grid-cols-2 items-center gap-0 ${
+                  imageLeft ? "" : "lg:[&>*:first-child]:order-last"
+                }`}
+              >
+                {/* Image column */}
+                <div className={`relative w-full h-[60vw] lg:h-screen flex items-center justify-center`}>
+                  {/* Glow blob */}
+                  <div
+                    className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                    aria-hidden
+                  >
+                    <div
+                      className="w-[80%] h-[80%] rounded-full"
+                      style={{
+                        background: `radial-gradient(circle, ${accent}35 0%, transparent 65%)`,
+                        filter: "blur(100px)",
+                      }}
+                    />
+                  </div>
+                  <Image
+                    src={product.heroImage.src}
+                    alt={product.heroImage.alt}
+                    fill
+                    className="object-contain"
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                  />
+                </div>
+
+                {/* Text column */}
+                <FadeIn from={imageLeft ? "right" : "left"} className={`py-16 lg:py-24 ${imageLeft ? "lg:pl-16" : "lg:pr-16"}`}>
+                  {/* Range label */}
+                  <span
+                    className="text-[10px] font-bold tracking-[0.3em] uppercase mb-4 block"
+                    style={{ color: accent }}
+                  >
+                    NEO {product.range}
+                  </span>
+
+                  {/* Product name */}
+                  <h2 className="text-5xl sm:text-6xl xl:text-[72px] font-extrabold text-white leading-[1.0] tracking-tight mb-5">
+                    {product.name}
+                  </h2>
+
+                  {/* Tagline + description */}
+                  {product.tagline && (
+                    <p className="text-lg sm:text-xl text-[#bababa] mb-3 leading-relaxed max-w-md">
+                      {product.tagline}
+                    </p>
+                  )}
+                  {product.description && (
+                    <p className="text-sm text-[#7a7178] mb-10 leading-relaxed max-w-md">
+                      {product.description}
+                    </p>
+                  )}
+
+                  {/* Key specs */}
+                  {keySpecs.length > 0 && (
+                    <div className="space-y-3 mb-10 max-w-sm">
+                      {keySpecs.map((spec) => (
+                        <div
+                          key={spec.label}
+                          className="flex items-baseline gap-4 border-b border-white/[0.06] pb-3"
+                        >
+                          <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-[#5a5158] w-20 shrink-0">
+                            {spec.label}
+                          </span>
+                          <span className="text-sm font-semibold text-white leading-snug">
+                            {spec.value}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* CTA */}
+                  <Link
+                    href={`/products/${product.slug}`}
+                    className="inline-flex items-center gap-3 group"
+                  >
+                    <span
+                      className="text-sm font-bold tracking-wide"
+                      style={{ color: accent }}
+                    >
+                      Explore {product.name}
+                    </span>
+                    <span
+                      className="w-8 h-8 rounded-full flex items-center justify-center border transition-all duration-200 group-hover:translate-x-1"
+                      style={{
+                        borderColor: `${accent}55`,
+                        color: accent,
+                      }}
+                    >
+                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+                      </svg>
+                    </span>
+                  </Link>
+                </FadeIn>
+              </div>
+            </div>
+          </section>
+        );
+      })}
+
+
+      {/* ══════════════════════════════════════════════════════
+          RESELLER HOOK
+          ══════════════════════════════════════════════════════ */}
+      <section className="bg-[#0d0b0c] border-t border-white/[0.04]">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-20">
+          <div className="card-glass rounded-[20px] p-8 sm:p-12 flex flex-col sm:flex-row items-center justify-between gap-8">
+            <div className="max-w-lg">
+              <p className="text-xs font-bold tracking-[0.25em] uppercase text-[#FF6D29] mb-3">For Resellers</p>
+              <h3 className="text-2xl sm:text-3xl font-extrabold text-white mb-3 leading-tight">
+                Interested in stocking these devices?
+              </h3>
+              <p className="text-[#7a7178] leading-relaxed">
+                Join the NEO reseller network. Free application, competitive margins, and
+                full local warranty support — built for Zambian businesses.
+              </p>
+            </div>
+            <Link href="/become-a-reseller" className="btn-neo text-base py-4 px-8 shrink-0">
+              Become a Reseller
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+              </svg>
+            </Link>
           </div>
-          <Link href="/become-a-reseller" className="btn-neo shrink-0">
-            Become a Reseller
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
-            </svg>
-          </Link>
         </div>
-      </div>
+      </section>
     </div>
   );
 }
