@@ -1,0 +1,39 @@
+services:
+  directus-db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: directus
+      POSTGRES_PASSWORD: directus_dev_password
+      POSTGRES_DB: directus
+    volumes:
+      - directus-db-data:/var/lib/postgresql/data
+    ports:
+      - "5434:5432"   # different port, avoids clashing with your other Postgres instances
+
+  directus:
+    image: directus/directus:latest
+    restart: unless-stopped
+    ports:
+      - "8055:8055"
+    depends_on:
+      - directus-db
+    environment:
+      CORS_ENABLED: "true"
+      CORS_ORIGIN: "http://localhost:3000"
+      KEY: "iY9UjfUesgCR38L1cr0+pWC6b2dgNzeQ4KlYLPL6ihA="
+      SECRET: "6UxPBeMKRpiGENhcqd0x+qYt0qK/4ZC5iTVkgVUuwgA="
+      DB_CLIENT: "pg"
+      DB_HOST: "directus-db"
+      DB_PORT: "5432"
+      DB_DATABASE: "directus"
+      DB_USER: "directus"
+      DB_PASSWORD: "directus_dev_password"
+      ADMIN_EMAIL: "admin@neo.local"
+      ADMIN_PASSWORD: "Neo2026!Admin#Zm"
+    volumes:
+      - directus-uploads:/directus/uploads
+
+volumes:
+  directus-db-data:
+  directus-uploads:
