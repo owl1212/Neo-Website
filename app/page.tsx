@@ -35,13 +35,11 @@ export default async function HomePage() {
           § 1  HERO — full-screen video, no overlay text
           ══════════════════════════════════════════════════════ */}
       <section className="relative h-screen overflow-hidden">
-        <video
-          src="/videos/pulse-7.mp4"
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover object-center"
+        <iframe
+          src="https://www.youtube.com/embed/GEDId6MZq4o?autoplay=1&mute=1&loop=1&playlist=GEDId6MZq4o&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1"
+          allow="autoplay; fullscreen"
+          className="absolute inset-0 w-full h-full pointer-events-none"
+          style={{ transform: "scale(1.5)", border: "none" }}
         />
         {/* Bottom fade into the brand section */}
         <div
