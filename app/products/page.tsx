@@ -40,9 +40,8 @@ export default async function ProductsPage() {
           ══════════════════════════════════════════════════════ */}
       <section className="relative h-screen overflow-hidden bg-[#0d0b0c]">
         <VideoHero
-          videoSrc="/videos/fusion-a5.mp4"
+          videoId="1Cir35FxcwY"
           fallbackImage={{ src: "/images/fusion-a5-hero.png", alt: "NEO Fusion A5 All-in-One PC" }}
-          className="absolute inset-0 w-full h-full object-cover"
         />
         {/* Bottom fade */}
         <div

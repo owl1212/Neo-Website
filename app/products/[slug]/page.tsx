@@ -38,11 +38,11 @@ const rangeHeadlines: Record<string, string> = {
 };
 
 const slugVideos: Record<string, string> = {
-  "fusion-a5": "/videos/fusion-a5.mp4",
-  "lite-14p": "/videos/lite-14p.mp4",
-  "lite-14s": "/videos/lite-14s.mp4",
-  "pulse-5": "/videos/pulse-5.mp4",
-  "pulse-7": "/videos/pulse-7.mp4",
+  "fusion-a5": "1Cir35FxcwY",
+  "lite-14p": "9Jlz4n_Co5M",
+  "lite-14s": "d0uwEk2ltEs",
+  "pulse-5": "snMMw6MngZ0",
+  "pulse-7": "GEDId6MZq4o",
 };
 
 function getHighlightStats(product: Product) {
@@ -80,9 +80,8 @@ export default async function ProductDetailPage(props: PageProps<"/products/[slu
           ══════════════════════════════════════════════════════ */}
       <section className="relative h-screen overflow-hidden bg-[#0d0b0c]">
         <VideoHero
-          videoSrc={videoSrc}
+          videoId={videoSrc}
           fallbackImage={product.heroImage}
-          className="absolute inset-0 w-full h-full object-cover"
         />
         <div
           className="absolute bottom-0 left-0 right-0 h-48 pointer-events-none"

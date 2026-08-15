@@ -37,9 +37,8 @@ export default async function HomePage() {
           ══════════════════════════════════════════════════════ */}
       <section className="relative h-screen overflow-hidden">
         <VideoHero
-          videoSrc="/videos/pulse-7.mp4"
+          videoId="GEDId6MZq4o"
           fallbackImage={{ src: "/images/pulse-7-hero.png", alt: "NEO Pulse 7 laptop" }}
-          className="absolute inset-0 w-full h-full object-cover object-center"
         />
         {/* Bottom fade into the brand section */}
         <div
