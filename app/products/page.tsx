@@ -4,14 +4,12 @@ import Link from "next/link";
 import { getProducts } from "@/lib/content";
 import type { Product } from "@/lib/types";
 import { FadeIn } from "@/components/FadeIn";
+import { VideoHero } from "@/components/VideoHero";
 
 export const metadata: Metadata = {
   title: "Products",
   description: "Browse the full NEO range — 6 devices built for Zambian life. Verified specs, no pricing.",
 };
-
-// ── Set this to your YouTube video ID once uploaded (e.g. "dQw4w9WgXcQ") ──────
-const HERO_VIDEO_ID = "";
 
 const rangeAccents: Record<string, string> = {
   Fusion: "#FF6D29",
@@ -41,12 +39,9 @@ export default async function ProductsPage() {
           HERO — full-screen video, no overlay text
           ══════════════════════════════════════════════════════ */}
       <section className="relative h-screen overflow-hidden bg-[#0d0b0c]">
-        <video
-          src="/videos/fusion-a5.mp4"
-          autoPlay
-          muted
-          loop
-          playsInline
+        <VideoHero
+          videoSrc="/videos/fusion-a5.mp4"
+          fallbackImage={{ src: "/images/fusion-a5-hero.png", alt: "NEO Fusion A5 All-in-One PC" }}
           className="absolute inset-0 w-full h-full object-cover"
         />
         {/* Bottom fade */}

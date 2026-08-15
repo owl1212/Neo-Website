@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { getProduct, getProductSlugs, getProducts } from "@/lib/content";
 import { ProductImage } from "@/components/ProductImage";
 import { ProductUseCases } from "@/components/ProductUseCases";
+import { VideoHero } from "@/components/VideoHero";
 import type { Product } from "@/lib/types";
 
 export async function generateStaticParams() {
@@ -77,32 +78,20 @@ export default async function ProductDetailPage(props: PageProps<"/products/[slu
       {/* ══════════════════════════════════════════════════════
           § 1  HERO — full-screen video
           ══════════════════════════════════════════════════════ */}
-      {videoSrc ? (
-        <section className="relative h-screen overflow-hidden bg-[#0d0b0c]">
-          <video
-            src={videoSrc}
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="absolute inset-0 w-full h-full object-cover"
-          />
-          <div
-            className="absolute bottom-0 left-0 right-0 h-48 pointer-events-none"
-            style={{ background: "linear-gradient(to top, #0d0b0c 0%, transparent 100%)" }}
-          />
-          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 opacity-50">
-            <div className="w-px h-10 bg-gradient-to-b from-[#FF6D29] to-transparent mx-auto" />
-          </div>
-        </section>
-      ) : (
-        <div
-          className="h-64 sm:h-96"
-          style={{
-            background: `radial-gradient(ellipse 80% 60% at 60% 30%, ${accent}20 0%, transparent 65%), #0d0b0c`,
-          }}
+      <section className="relative h-screen overflow-hidden bg-[#0d0b0c]">
+        <VideoHero
+          videoSrc={videoSrc}
+          fallbackImage={product.heroImage}
+          className="absolute inset-0 w-full h-full object-cover"
         />
-      )}
+        <div
+          className="absolute bottom-0 left-0 right-0 h-48 pointer-events-none"
+          style={{ background: "linear-gradient(to top, #0d0b0c 0%, transparent 100%)" }}
+        />
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 opacity-50">
+          <div className="w-px h-10 bg-gradient-to-b from-[#FF6D29] to-transparent mx-auto" />
+        </div>
+      </section>
 
 
       {/* ══════════════════════════════════════════════════════

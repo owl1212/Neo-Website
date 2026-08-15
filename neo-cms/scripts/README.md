@@ -64,3 +64,26 @@ assumption; it's since been rewritten against the Policy model described
 above and against a confirmed-real error message, but has **not yet been
 re-run against a live instance** — run it and check the console output
 before trusting it fully.
+
+# scripts/fix-product-image-paths.js
+
+One-time fix for product `hero_image`/`gallery` paths left over from
+before the v1.0 UI redesign renamed every product image from `.jpg` to
+`.png`. `setup-directus.js` imported the old `.jpg` paths on first run;
+this re-syncs just `hero_image` and `gallery` per product (matched by
+`slug`) from the current `../data/products.ts`, which already has the
+correct `.png` paths. Doesn't touch any other field, so it won't clobber
+hand-edits made in the Directus admin UI elsewhere on the record.
+
+Safe to re-run — skips products that are already correct, and skips (with
+a log line, not an error) any slug that doesn't exist in Directus yet.
+
+```sh
+DIRECTUS_URL=http://localhost:8055 \
+DIRECTUS_ADMIN_EMAIL=you@example.com \
+DIRECTUS_ADMIN_PASSWORD=your-password \
+npm run fix-image-paths
+```
+
+Not yet run against a live instance — same no-network constraint as
+above, so paste back the console output after running it.

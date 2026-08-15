@@ -6,6 +6,7 @@
     "node": ">=18"
   },
   "scripts": {
-    "setup": "node scripts/setup-directus.js"
+    "setup": "node scripts/setup-directus.js",
+    "fix-image-paths": "node scripts/fix-product-image-paths.js"
   }
 }

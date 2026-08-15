@@ -41,6 +41,7 @@ export default async function FindNeoPage() {
             fill
             className="object-contain object-bottom"
             priority
+            sizes="1500px"
           />
         </div>
       </div>

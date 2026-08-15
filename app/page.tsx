@@ -3,6 +3,7 @@ import Image from "next/image";
 import { getProducts } from "@/lib/content";
 import { ProductCarousel } from "@/components/ProductCarousel";
 import { FadeIn } from "@/components/FadeIn";
+import { VideoHero } from "@/components/VideoHero";
 
 // ─── Why NEO — reseller-facing value props ───────────────────────────────────
 const whyNeo = [
@@ -35,12 +36,9 @@ export default async function HomePage() {
           § 1  HERO — full-screen video, no overlay text
           ══════════════════════════════════════════════════════ */}
       <section className="relative h-screen overflow-hidden">
-        <video
-          src="/videos/pulse-7.mp4"
-          autoPlay
-          muted
-          loop
-          playsInline
+        <VideoHero
+          videoSrc="/videos/pulse-7.mp4"
+          fallbackImage={{ src: "/images/pulse-7-hero.png", alt: "NEO Pulse 7 laptop" }}
           className="absolute inset-0 w-full h-full object-cover object-center"
         />
         {/* Bottom fade into the brand section */}

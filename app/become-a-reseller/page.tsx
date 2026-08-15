@@ -102,6 +102,7 @@ export default function BecomeAResellerPage() {
             fill
             className="object-contain object-bottom"
             priority
+            sizes="1000px"
           />
         </div>
       </div>

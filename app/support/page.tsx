@@ -68,6 +68,7 @@ export default function SupportPage() {
             fill
             className="object-contain object-bottom"
             priority
+            sizes="1000px"
           />
         </div>
       </div>
@@ -127,6 +128,7 @@ export default function SupportPage() {
             alt="NEO"
             fill
             className="object-contain object-bottom"
+            sizes="1100px"
           />
         </div>
         <div className="max-w-7xl mx-auto px-5 sm:px-8 py-20">
