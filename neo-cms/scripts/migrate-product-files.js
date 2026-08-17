@@ -30,17 +30,25 @@
  *      description, type, filename_download) — a separate permission
  *      from reading `products` itself. Without it, Directus can't expand
  *      a file relation for an unauthenticated request and silently
- *      collapses it to the bare file id, dropping the alt text.
- *   4. Grants the Public policy read access to gallery_files' junction
- *      collection (auto-created by Directus when the M2M field was set
- *      up, e.g. products_files — discovered dynamically via /relations,
- *      not assumed). Yet another separate permission; without it
- *      gallery_files comes back missing from the response entirely.
+ *      collapses it to the bare file id, dropping the alt text. Skipped
+ *      (existence-check only, no PATCH) if a read permission already
+ *      exists for this collection — PATCH /permissions has turned out to
+ *      be restricted from the API on this instance, so a permission set
+ *      up by hand in the Admin UI is left alone rather than fought over.
+ *   4. Same as step 3, for gallery_files' junction collection
+ *      (auto-created by Directus when the M2M field was set up, e.g.
+ *      products_files — discovered dynamically via /relations, not
+ *      assumed). Without this, gallery_files comes back missing from the
+ *      response entirely.
  *   5. Creates a "Products" folder in the Directus file library.
- *   6. For each product in ../../data/products.ts, uploads its hero
- *      image, gallery images, and spec sheet PDF from public/ to
- *      Directus, then links the resulting file(s) to that product's new
- *      fields.
+ *   6. For each product in ../../data/products.ts, uploads and links
+ *      whichever of hero image / gallery / spec sheet PDF it's still
+ *      missing — checked independently per field, not as one
+ *      all-or-nothing "already migrated" flag. That matters in practice:
+ *      gallery_files got rebuilt from scratch after an earlier bug (see
+ *      rebuild-gallery-files-field.js), so a product can have
+ *      hero_image_file set but zero gallery images linked, and this
+ *      still needs to fill in just the gallery for it.
  *
  * Usage:
  *   DIRECTUS_ADMIN_EMAIL=you@example.com \
@@ -51,10 +59,17 @@
  *   DIRECTUS_URL (default http://localhost:8055)
  *
  * Requires Node 18+ (uses global fetch, FormData, Blob). No npm deps.
- * Safe to re-run: a product already carrying a hero_image_file is
- * assumed already migrated and is skipped entirely. Uploads are deduped
- * within a single run by local file path, so a file used as both a
- * product's hero image and a gallery entry is only uploaded once.
+ * Safe to re-run: hero image / gallery / spec sheet are each checked and
+ * uploaded independently, so a partially-migrated product only gets the
+ * missing piece(s) filled in, not re-uploaded from scratch. Uploads are
+ * deduped within a single run by local file path — but only within that
+ * run; a file uploaded in an earlier run (e.g. a hero image) isn't in
+ * this run's cache, so if that same local file also appears in the
+ * gallery and hero was already linked (so gallery is uploaded on its
+ * own this time), it'll upload as a second, separate Directus file
+ * rather than reusing the earlier one. Harmless duplication, not a
+ * correctness issue — worth a manual cleanup in the file library later
+ * if it bothers you, not worth the complexity of fixing here.
  */
 
 const fs = require("fs");
@@ -196,22 +211,24 @@ async function findPermission(policyId, collection, action) {
 }
 
 async function ensurePublicFilesReadPermission(policyId) {
-  const body = {
+  // Existence-check only, same as ensureSingleFileField/ensureProductsFolder
+  // below — doesn't attempt to reconcile an existing row's exact
+  // fields/filter. PATCH /permissions has turned out to be restricted from
+  // the API on this instance, so once a permission row exists (however it
+  // got there — including set up by hand in the Admin UI), leave it alone.
+  const existing = await findPermission(policyId, "directus_files", "read");
+  if (existing) {
+    console.log('  public read permission for "directus_files" already exists, skipping');
+    return;
+  }
+  await directus("POST", "/permissions", {
     policy: policyId,
     collection: "directus_files",
     action: "read",
     permissions: {}, // no row filter — every uploaded file is meant to be publicly viewable anyway (that's what /assets/{id} already does unauthenticated)
     fields: ["id", "title", "description", "type", "filename_download"],
-  };
-
-  const existing = await findPermission(policyId, "directus_files", "read");
-  if (existing) {
-    await directus("PATCH", `/permissions/${existing.id}`, body);
-    console.log('  updated public read permission for "directus_files"');
-  } else {
-    await directus("POST", "/permissions", body);
-    console.log('  created public read permission for "directus_files"');
-  }
+  });
+  console.log('  created public read permission for "directus_files"');
 }
 
 // gallery_files (M2M) reads through a junction collection (e.g.
@@ -225,14 +242,19 @@ async function ensurePublicFilesReadPermission(policyId) {
 // rather than assumed to be "products_files", in case it was named
 // differently when created.
 async function findGalleryJunctionCollection() {
-  const { data } = await directus(
-    "GET",
-    withQuery("/relations", {
-      filter: { one_collection: { _eq: "products" }, one_field: { _eq: "gallery_files" } },
-      limit: 1,
-    })
+  // /relations is a Directus *system* endpoint, not a generic
+  // /items/{collection} route — it doesn't go through the same
+  // query-filtering pipeline. Confirmed the hard way: both a top-level
+  // `filter[one_collection]` and a `filter[meta][one_collection]` shape
+  // silently returned the exact same unfiltered list (data[0] landing on
+  // "directus_revisions" both times) — the `filter` param just isn't
+  // applied on this endpoint. Fetching everything and searching
+  // client-side instead, where there's no ambiguity about what's
+  // actually being matched.
+  const { data } = await directus("GET", "/relations");
+  const row = data.find(
+    (r) => r.meta?.one_collection === "products" && r.meta?.one_field === "gallery_files"
   );
-  const row = data[0];
   if (!row) {
     throw new Error(
       "Could not find the junction collection for products.gallery_files via /relations. " +
@@ -243,22 +265,21 @@ async function findGalleryJunctionCollection() {
 }
 
 async function ensurePublicJunctionReadPermission(policyId, collection) {
-  const body = {
+  // Same existence-check-only idempotency as ensurePublicFilesReadPermission
+  // above — see that comment for why this doesn't PATCH an existing row.
+  const existing = await findPermission(policyId, collection, "read");
+  if (existing) {
+    console.log(`  public read permission for "${collection}" already exists, skipping`);
+    return;
+  }
+  await directus("POST", "/permissions", {
     policy: policyId,
     collection,
     action: "read",
     permissions: {},
     fields: ["*"],
-  };
-
-  const existing = await findPermission(policyId, collection, "read");
-  if (existing) {
-    await directus("PATCH", `/permissions/${existing.id}`, body);
-    console.log(`  updated public read permission for "${collection}"`);
-  } else {
-    await directus("POST", "/permissions", body);
-    console.log(`  created public read permission for "${collection}"`);
-  }
+  });
+  console.log(`  created public read permission for "${collection}"`);
 }
 
 // ---------------------------------------------------------------------------
@@ -363,7 +384,9 @@ async function findProductBySlug(slug) {
     withQuery("/items/products", {
       filter: { slug: { _eq: slug } },
       limit: 1,
-      fields: "id,slug,name,hero_image_file",
+      // gallery_files.id (not bare gallery_files) so an empty M2M comes
+      // back as [] we can .length-check, rather than being omitted.
+      fields: "id,slug,name,hero_image_file,gallery_files.id,spec_sheet_pdf_file",
     })
   );
   return data[0] || null;
@@ -375,40 +398,54 @@ async function migrateProduct(p, folderId) {
     console.log(`  ${p.slug}: not found in Directus, skipping`);
     return;
   }
-  if (existing.hero_image_file) {
-    console.log(`  ${p.slug}: already migrated, skipping`);
+
+  // Checked per-field, not as one all-or-nothing "already migrated" flag —
+  // gallery_files was rebuilt from scratch after the self-relation bug, so
+  // a product can easily have hero_image_file set but zero gallery links.
+  const needsHero = !existing.hero_image_file;
+  const needsGallery = !existing.gallery_files || existing.gallery_files.length === 0;
+  const needsSpecSheet = !existing.spec_sheet_pdf_file && !!p.specSheetPdf?.src;
+
+  if (!needsHero && !needsGallery && !needsSpecSheet) {
+    console.log(`  ${p.slug}: already fully migrated, skipping`);
     return;
   }
 
   console.log(`  ${p.slug}:`);
+  const patch = {};
 
-  const heroFileId = await uploadFile(
-    localPathFor(p.heroImage.src),
-    p.heroImage.alt || p.name,
-    folderId
-  );
-
-  const galleryFileIds = [];
-  for (const img of p.gallery ?? []) {
-    const id = await uploadFile(localPathFor(img.src), img.alt || p.name, folderId);
-    galleryFileIds.push(id);
+  if (needsHero) {
+    patch.hero_image_file = await uploadFile(localPathFor(p.heroImage.src), p.heroImage.alt || p.name, folderId);
+  } else {
+    console.log("    hero image already linked, skipping");
   }
 
-  let specSheetFileId = null;
-  if (p.specSheetPdf?.src) {
-    specSheetFileId = await uploadFile(
+  if (needsGallery) {
+    const galleryFileIds = [];
+    for (const img of p.gallery ?? []) {
+      galleryFileIds.push(await uploadFile(localPathFor(img.src), img.alt || p.name, folderId));
+    }
+    patch.gallery_files = galleryFileIds.map((id) => ({ directus_files_id: id }));
+  } else {
+    console.log("    gallery already linked, skipping");
+  }
+
+  if (needsSpecSheet) {
+    patch.spec_sheet_pdf_file = await uploadFile(
       localPathFor(p.specSheetPdf.src),
       `${p.name} Spec Sheet`,
       folderId
     );
+  } else if (existing.spec_sheet_pdf_file) {
+    console.log("    spec sheet already linked, skipping");
   }
 
-  await directus("PATCH", `/items/products/${existing.id}`, {
-    hero_image_file: heroFileId,
-    gallery_files: galleryFileIds.map((id) => ({ directus_files_id: id })),
-    ...(specSheetFileId ? { spec_sheet_pdf_file: specSheetFileId } : {}),
-  });
-  console.log(`    linked to product (hero + ${galleryFileIds.length} gallery image(s)${specSheetFileId ? " + spec sheet" : ""})`);
+  await directus("PATCH", `/items/products/${existing.id}`, patch);
+  const linked = [];
+  if (patch.hero_image_file) linked.push("hero image");
+  if (patch.gallery_files) linked.push(`${patch.gallery_files.length} gallery image(s)`);
+  if (patch.spec_sheet_pdf_file) linked.push("spec sheet");
+  console.log(`    linked: ${linked.join(", ")}`);
 }
 
 // ---------------------------------------------------------------------------

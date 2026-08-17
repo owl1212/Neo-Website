@@ -8,6 +8,10 @@
   "scripts": {
     "setup": "node scripts/setup-directus.js",
     "fix-image-paths": "node scripts/fix-product-image-paths.js",
-    "migrate-product-files": "node scripts/migrate-product-files.js"
+    "migrate-product-files": "node scripts/migrate-product-files.js",
+    "fix-product-schema": "node scripts/fix-product-schema.js",
+    "diagnose-gallery-relations": "node scripts/diagnose-gallery-relations.js",
+    "rebuild-gallery-files-field": "node scripts/rebuild-gallery-files-field.js",
+    "convert-spec-groups-to-repeater": "node scripts/convert-spec-groups-to-repeater.js"
   }
 }
