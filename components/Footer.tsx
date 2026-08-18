@@ -32,7 +32,7 @@ export default function Footer() {
     <footer className="bg-[#0a0809] border-t border-[rgba(255,109,41,0.1)] mt-auto">
       <div className="max-w-7xl mx-auto px-5 sm:px-8">
         {/* Top */}
-        <div className="py-16 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-10">
+        <div className="py-10 md:py-16 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 md:gap-10">
           {/* Brand column */}
           <div className="col-span-2 md:col-span-3 lg:col-span-1">
             <Link href="/" className="inline-flex items-center gap-2.5 mb-4">

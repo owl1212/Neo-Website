@@ -15,7 +15,7 @@ export default async function FindNeoPage() {
   return (
     <div className="pt-20 min-h-screen">
       {/* Hero */}
-      <div className="relative min-h-[700px] flex items-center overflow-hidden">
+      <div className="relative min-h-[480px] sm:min-h-[600px] lg:min-h-[700px] flex items-center overflow-hidden">
         <div
           className="absolute inset-0 pointer-events-none"
           style={{ background: "radial-gradient(ellipse 60% 50% at 50% 0%, rgba(255,109,41,0.15) 0%, transparent 60%)" }}

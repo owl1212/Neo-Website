@@ -78,7 +78,7 @@ export default async function ProductDetailPage(props: PageProps<"/products/[slu
           § 1  HERO — full-screen video
           ══════════════════════════════════════════════════════ */}
       {videoSrc ? (
-        <section className="relative h-screen overflow-hidden bg-[#0d0b0c]">
+        <section className="relative w-full aspect-video lg:aspect-auto lg:h-screen overflow-hidden bg-[#0d0b0c]">
           <video
             src={videoSrc}
             autoPlay
@@ -88,10 +88,10 @@ export default async function ProductDetailPage(props: PageProps<"/products/[slu
             className="absolute inset-0 w-full h-full object-cover"
           />
           <div
-            className="absolute bottom-0 left-0 right-0 h-48 pointer-events-none"
+            className="absolute bottom-0 left-0 right-0 h-12 lg:h-48 pointer-events-none"
             style={{ background: "linear-gradient(to top, #0d0b0c 0%, transparent 100%)" }}
           />
-          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 opacity-50">
+          <div className="hidden lg:block absolute bottom-8 left-1/2 -translate-x-1/2 opacity-50">
             <div className="w-px h-10 bg-gradient-to-b from-[#FF6D29] to-transparent mx-auto" />
           </div>
         </section>
@@ -134,7 +134,7 @@ export default async function ProductDetailPage(props: PageProps<"/products/[slu
             </span>
             <h1
               className="font-extrabold text-white leading-[1.0] tracking-tight mb-4"
-              style={{ fontSize: "clamp(52px, 9vw, 120px)" }}
+              style={{ fontSize: "clamp(40px, 9vw, 120px)" }}
             >
               {product.name}
             </h1>
@@ -163,7 +163,7 @@ export default async function ProductDetailPage(props: PageProps<"/products/[slu
           </div>
 
           {/* Hero product image — large, full-width */}
-          <div className="relative w-full" style={{ height: "clamp(320px, 55vw, 760px)" }}>
+          <div className="relative w-full" style={{ height: product.range === "Tab" ? "clamp(180px, 38vw, 520px)" : "clamp(220px, 55vw, 760px)" }}>
             <div
               className="absolute inset-0 flex items-center justify-center pointer-events-none"
               aria-hidden
@@ -182,7 +182,7 @@ export default async function ProductDetailPage(props: PageProps<"/products/[slu
               src={product.heroImage.src}
               alt={product.heroImage.alt}
               fill
-              className="object-contain"
+              className={`object-contain ${product.range === "Tab" ? "scale-[0.6]" : ""}`}
               sizes="100vw"
               priority
             />
@@ -226,15 +226,11 @@ export default async function ProductDetailPage(props: PageProps<"/products/[slu
           </div>
 
           {/* Stat callouts */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-0 border border-white/[0.07] rounded-2xl overflow-hidden">
+          <div className="grid grid-cols-2 lg:grid-cols-4 rounded-2xl overflow-hidden border border-white/[0.07]">
             {highlightStats.map((spec, i) => (
               <div
                 key={spec.label}
-                className="p-6 sm:p-8 border-white/[0.07]"
-                style={{
-                  borderRight: i < highlightStats.length - 1 ? "1px solid rgba(255,255,255,0.07)" : undefined,
-                  borderBottom: i < 2 ? "1px solid rgba(255,255,255,0.07)" : undefined,
-                }}
+                className="p-6 sm:p-8 border-r border-b border-white/[0.07]"
               >
                 <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-[#5a5158] mb-3">
                   {spec.label}
@@ -316,7 +312,7 @@ export default async function ProductDetailPage(props: PageProps<"/products/[slu
               <div className="text-center">
                 <p
                   className="font-extrabold leading-none"
-                  style={{ color: accent, fontSize: "clamp(80px, 18vw, 200px)" }}
+                  style={{ color: accent, fontSize: "clamp(48px, 14vw, 200px)" }}
                 >
                   {displayGroup.specs[0]?.value.split(" ")[0]}
                 </p>

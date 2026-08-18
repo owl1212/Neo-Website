@@ -77,7 +77,7 @@ export default function Nav() {
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
               aria-label="Toggle menu"
-              className="lg:hidden flex flex-col justify-center items-center w-9 h-9 gap-1.5"
+              className="lg:hidden flex flex-col justify-center items-center w-11 h-11 gap-1.5"
             >
               <span
                 className={`block h-0.5 w-5 bg-white transition-all duration-200 ${

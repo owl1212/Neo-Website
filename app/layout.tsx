@@ -19,6 +19,11 @@ export const metadata: Metadata = {
   description:
     "NEO is Zambia's first laptop brand — built for the people. Discover our full range of laptops, tablets, and PCs, find a reseller near you, or become a NEO partner.",
   keywords: ["NEO", "Zambia", "laptop", "Zambian laptop brand", "reseller", "Fusion A5", "Lite", "Pulse", "Tab T606"],
+  icons: {
+    icon: "/images/neo-logo.png",
+    shortcut: "/images/neo-logo.png",
+    apple: "/images/neo-logo.png",
+  },
   openGraph: {
     type: "website",
     locale: "en_ZM",

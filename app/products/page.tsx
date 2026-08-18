@@ -40,7 +40,7 @@ export default async function ProductsPage() {
       {/* ══════════════════════════════════════════════════════
           HERO — full-screen video, no overlay text
           ══════════════════════════════════════════════════════ */}
-      <section className="relative h-screen overflow-hidden bg-[#0d0b0c]">
+      <section className="relative w-full aspect-video lg:aspect-auto lg:h-screen overflow-hidden bg-[#0d0b0c]">
         <video
           src="/videos/fusion-a5.mp4"
           autoPlay
@@ -51,11 +51,11 @@ export default async function ProductsPage() {
         />
         {/* Bottom fade */}
         <div
-          className="absolute bottom-0 left-0 right-0 h-40 pointer-events-none"
+          className="absolute bottom-0 left-0 right-0 h-12 lg:h-40 pointer-events-none"
           style={{ background: "linear-gradient(to top, #0d0b0c 0%, transparent 100%)" }}
         />
-        {/* Scroll cue */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50">
+        {/* Scroll cue — desktop only */}
+        <div className="hidden lg:flex absolute bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-2 opacity-50">
           <div className="w-px h-10 bg-gradient-to-b from-[#FF6D29] to-transparent" />
         </div>
       </section>
@@ -130,13 +130,13 @@ export default async function ProductsPage() {
                     src={product.heroImage.src}
                     alt={product.heroImage.alt}
                     fill
-                    className="object-contain"
+                    className={`object-contain ${product.range === "Tab" ? "scale-[0.7]" : ""}`}
                     sizes="(max-width: 1024px) 100vw, 50vw"
                   />
                 </div>
 
                 {/* Text column */}
-                <FadeIn from={imageLeft ? "right" : "left"} className={`py-16 lg:py-24 ${imageLeft ? "lg:pl-16" : "lg:pr-16"}`}>
+                <FadeIn from={imageLeft ? "right" : "left"} className={`py-10 lg:py-24 ${imageLeft ? "lg:pl-16" : "lg:pr-16"}`}>
                   {/* Range label */}
                   <span
                     className="text-[10px] font-bold tracking-[0.3em] uppercase mb-4 block"
