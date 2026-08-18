@@ -85,6 +85,8 @@ export default async function ProductDetailPage(props: PageProps<"/products/[slu
             muted
             loop
             playsInline
+            preload="auto"
+            poster={product.heroImage.src}
             className="absolute inset-0 w-full h-full object-cover"
           />
           <div

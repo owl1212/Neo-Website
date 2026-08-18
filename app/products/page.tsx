@@ -47,6 +47,8 @@ export default async function ProductsPage() {
           muted
           loop
           playsInline
+          preload="auto"
+          poster="/images/fusion-a5-hero.png"
           className="absolute inset-0 w-full h-full object-cover"
         />
         {/* Bottom fade */}

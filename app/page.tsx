@@ -41,6 +41,8 @@ export default async function HomePage() {
           muted
           loop
           playsInline
+          preload="auto"
+          poster="/images/pulse-7-hero.png"
           className="absolute inset-0 w-full h-full object-cover object-center"
         />
         {/* Bottom fade into the brand section */}
