@@ -41,11 +41,13 @@ export default async function ProductsPage() {
           HERO — full-screen video, no overlay text
           ══════════════════════════════════════════════════════ */}
       <section className="relative h-screen overflow-hidden bg-[#0d0b0c]">
-        <iframe
-          src="https://www.youtube.com/embed/1Cir35FxcwY?autoplay=1&mute=1&loop=1&playlist=1Cir35FxcwY&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1"
-          allow="autoplay; fullscreen"
-          className="absolute inset-0 w-full h-full pointer-events-none"
-          style={{ transform: "scale(1.5)", border: "none" }}
+        <video
+          src="/videos/fusion-a5.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
         />
         {/* Bottom fade */}
         <div

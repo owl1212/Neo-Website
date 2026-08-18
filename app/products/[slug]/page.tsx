@@ -37,11 +37,11 @@ const rangeHeadlines: Record<string, string> = {
 };
 
 const slugVideos: Record<string, string> = {
-  "fusion-a5": "1Cir35FxcwY",
-  "lite-14p": "9Jlz4n_Co5M",
-  "lite-14s": "d0uwEk2ltEs",
-  "pulse-5": "snMMw6MngZ0",
-  "pulse-7": "GEDId6MZq4o",
+  "fusion-a5": "/videos/fusion-a5.mp4",
+  "lite-14p": "/videos/lite-14p.mp4",
+  "lite-14s": "/videos/lite-14s.mp4",
+  "pulse-5": "/videos/pulse-5.mp4",
+  "pulse-7": "/videos/pulse-7.mp4",
 };
 
 function getHighlightStats(product: Product) {
@@ -79,11 +79,13 @@ export default async function ProductDetailPage(props: PageProps<"/products/[slu
           ══════════════════════════════════════════════════════ */}
       {videoSrc ? (
         <section className="relative h-screen overflow-hidden bg-[#0d0b0c]">
-          <iframe
-            src={`https://www.youtube.com/embed/${videoSrc}?autoplay=1&mute=1&loop=1&playlist=${videoSrc}&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1`}
-            allow="autoplay; fullscreen"
-            className="absolute inset-0 w-full h-full pointer-events-none"
-            style={{ transform: "scale(1.5)", border: "none" }}
+          <video
+            src={videoSrc}
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="absolute inset-0 w-full h-full object-cover"
           />
           <div
             className="absolute bottom-0 left-0 right-0 h-48 pointer-events-none"
