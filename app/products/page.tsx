@@ -10,9 +10,6 @@ export const metadata: Metadata = {
   description: "Browse the full NEO range — 6 devices built for Zambian life. Verified specs, no pricing.",
 };
 
-// ── Set this to your YouTube video ID once uploaded (e.g. "dQw4w9WgXcQ") ──────
-const HERO_VIDEO_ID = "";
-
 const rangeAccents: Record<string, string> = {
   Fusion: "#FF6D29",
   Lite: "#6b9fff",
