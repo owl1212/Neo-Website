@@ -13,7 +13,20 @@
 
 import type { NeoImage, Product, Reseller, NewsPost } from "@/lib/types";
 
+// Server-only — used for every Directus API call made from here (SSR/ISR,
+// runs on the server) and for building heroImage/gallery URLs, which are
+// always rendered through next/image. Its optimizer route fetches the
+// original image server-side, so the browser never requests this host
+// directly — it can stay an internal/localhost address in production.
 const DIRECTUS_URL = (process.env.DIRECTUS_URL ?? "http://localhost:8055").replace(/\/+$/, "");
+
+// NEXT_PUBLIC_ because specSheetPdf.src is rendered as a plain <a href>
+// download link (app/products/[slug]/page.tsx) — the browser navigates to
+// it directly, on the visitor's machine, so it must be the real public
+// Directus URL, not whatever internal address the server uses to reach
+// Directus. Falls back to DIRECTUS_URL for local dev, where they're the
+// same host anyway.
+const PUBLIC_DIRECTUS_URL = (process.env.NEXT_PUBLIC_DIRECTUS_URL ?? DIRECTUS_URL).replace(/\/+$/, "");
 
 // CMS content doesn't need to be fetched fresh on every request — revalidate
 // periodically instead (Next.js ISR-style ). Adjust down if edits need to
@@ -116,6 +129,10 @@ function assetUrl(fileId: string): string {
   return `${DIRECTUS_URL}/assets/${fileId}`;
 }
 
+function publicAssetUrl(fileId: string): string {
+  return `${PUBLIC_DIRECTUS_URL}/assets/${fileId}`;
+}
+
 function fileId(file: DirectusFileRelation): string | null {
   if (!file) return null;
   return typeof file === "string" ? file : file.id;
@@ -144,8 +161,11 @@ function mapProduct(raw: DirectusProduct): Product {
     heroImage: mapFileToImage(raw.hero_image_file, raw.name) ?? { src: "", alt: raw.name },
     gallery,
     specGroups: raw.spec_groups ?? [],
+    // publicAssetUrl, not assetUrl — rendered as a raw <a href> download
+    // link, fetched directly by the visitor's browser, not proxied
+    // through next/image like heroImage/gallery are.
     specSheetPdf: fileId(raw.spec_sheet_pdf_file)
-      ? { src: assetUrl(fileId(raw.spec_sheet_pdf_file)!), label: "Download Spec Sheet" }
+      ? { src: publicAssetUrl(fileId(raw.spec_sheet_pdf_file)!), label: "Download Spec Sheet" }
       : undefined,
     status: raw.status,
   };
