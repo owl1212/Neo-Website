@@ -60,9 +60,10 @@ export default async function NewsPage() {
           ) : (
             <div className="grid md:grid-cols-2 gap-6">
               {posts.map((post, i) => (
-                <article
+                <Link
                   key={post.slug}
-                  className={`card-light rounded-[20px] overflow-hidden hover:border-[rgba(255,109,41,0.3)] transition-all duration-300 flex flex-col ${i === 0 ? "md:col-span-2" : ""}`}
+                  href={`/news/${post.slug}`}
+                  className={`card-light rounded-[20px] overflow-hidden hover:border-[rgba(255,109,41,0.3)] transition-all duration-300 flex flex-col group ${i === 0 ? "md:col-span-2" : ""}`}
                 >
                   {/* Cover */}
                   <div
@@ -84,7 +85,7 @@ export default async function NewsPage() {
                       <p className="text-sm text-[#4a3f46] leading-relaxed mb-4">{post.excerpt}</p>
                     )}
                     <div className="mt-auto">
-                      <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#FF6D29]">
+                      <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#FF6D29] group-hover:gap-2.5 transition-all">
                         Read more
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
@@ -92,7 +93,7 @@ export default async function NewsPage() {
                       </span>
                     </div>
                   </div>
-                </article>
+                </Link>
               ))}
             </div>
           )}

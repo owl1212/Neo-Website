@@ -13,9 +13,10 @@ type VideoHeroProps = {
 // Full-bleed hero background: plays videoSrc if given, but falls back to a
 // static image when there's no video source at all, or the <video> fires
 // onError — so a missing/failed asset degrades to a real image instead of
-// a blank box. `poster` (shown while the video loads, and in most browsers
-// if it fails outright) covers the more common case; onError is the
-// explicit belt-and-suspenders fallback to a fully separate <Image>.
+// a blank box. No `poster` attribute (deliberately dropped from every
+// video hero — see 1.0's "Remove poster attribute from all video
+// elements"/"Remove homepage hero video poster image"); onError remains
+// as the fallback for a video that fails outright.
 export function VideoHero({ videoSrc, fallbackImage, className }: VideoHeroProps) {
   const [videoFailed, setVideoFailed] = useState(false);
 
@@ -40,7 +41,6 @@ export function VideoHero({ videoSrc, fallbackImage, className }: VideoHeroProps
       loop
       playsInline
       preload="metadata"
-      poster={fallbackImage.src}
       aria-hidden="true"
       onError={() => setVideoFailed(true)}
       className={className}
