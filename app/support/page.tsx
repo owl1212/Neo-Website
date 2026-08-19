@@ -75,6 +75,26 @@ export default function SupportPage() {
       {/* Warranty cards [LIGHT] */}
       <section className="bg-[#FAF7F4]">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 py-16">
+
+          {/* Warranty download */}
+          <div className="flex items-center justify-between flex-wrap gap-4 mb-10 pb-8 border-b border-black/[0.06]">
+            <div>
+              <p className="text-xs font-bold tracking-[0.2em] uppercase text-[#FF6D29] mb-1">Official Document</p>
+              <h2 className="text-xl font-extrabold text-[#1a1518]">Warranty & Returns Policy</h2>
+              <p className="text-sm text-[#7a7178] mt-1">Download the full terms — 12-month coverage, returns process, and claim conditions.</p>
+            </div>
+            <a
+              href="/Specs/NEO_Warranty_Returns_Policy.pdf"
+              download
+              className="inline-flex items-center gap-3 bg-[#1a1518] text-white text-sm font-semibold px-6 py-3 rounded-full hover:bg-[#FF6D29] transition-colors duration-200 shrink-0"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+              </svg>
+              Download Warranty T&Cs
+            </a>
+          </div>
+
           <div className="grid sm:grid-cols-3 gap-5">
             {[
               {
