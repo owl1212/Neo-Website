@@ -44,6 +44,14 @@ const slugVideos: Record<string, string> = {
   "pulse-7": "/videos/pulse-7.mp4",
 };
 
+const slugPosters: Record<string, string> = {
+  "fusion-a5": "/images/Poster-Fusion.png",
+  "lite-14p": "/images/poster-Lite14p.png",
+  "lite-14s": "/images/poster-Lite-14s.png",
+  "pulse-5": "/images/poster-Pulse5.png",
+  "pulse-7": "/images/Poster-Pulse7.png",
+};
+
 function getHighlightStats(product: Product) {
   const perf = product.specGroups.find((g) => g.label === "Performance");
   const display = product.specGroups.find((g) => g.label === "Display");
@@ -68,6 +76,7 @@ export default async function ProductDetailPage(props: PageProps<"/products/[slu
   const accent = rangeAccents[product.range ?? "Fusion"] ?? "#FF6D29";
   const headline = rangeHeadlines[product.range ?? "Fusion"] ?? "";
   const videoSrc = slugVideos[slug] ?? null;
+  const videoPoster = slugPosters[slug] ?? product.heroImage.src;
   const highlightStats = getHighlightStats(product);
   const displayGroup = product.specGroups.find((g) => g.label === "Display");
 
@@ -86,7 +95,7 @@ export default async function ProductDetailPage(props: PageProps<"/products/[slu
             loop
             playsInline
             preload="metadata"
-            poster={product.heroImage.src}
+            poster={videoPoster}
             aria-hidden="true"
             className="absolute inset-0 w-full h-full object-cover"
           />
