@@ -46,6 +46,7 @@ export default async function ProductsPage() {
           playsInline
           preload="auto"
           poster="/images/fusion-a5-hero.png"
+          aria-hidden="true"
           className="absolute inset-0 w-full h-full object-cover"
         />
         {/* Bottom fade */}
@@ -129,6 +130,7 @@ export default async function ProductsPage() {
                     src={product.heroImage.src}
                     alt={product.heroImage.alt}
                     fill
+                    priority={i === 0}
                     className={`object-contain ${product.range === "Tab" ? "scale-[0.7]" : ""}`}
                     sizes="(max-width: 1024px) 100vw, 50vw"
                   />
@@ -169,7 +171,7 @@ export default async function ProductsPage() {
                           key={spec.label}
                           className="flex items-baseline gap-4 border-b border-white/[0.06] pb-3"
                         >
-                          <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-[#5a5158] w-20 shrink-0">
+                          <span className="text-[11px] font-bold tracking-[0.2em] uppercase text-[#9a9096] w-20 shrink-0">
                             {spec.label}
                           </span>
                           <span className="text-sm font-semibold text-white leading-snug">

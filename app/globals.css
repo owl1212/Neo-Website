@@ -292,3 +292,35 @@ body {
   background: rgba(255, 109, 41, 0.3);
   color: #ffffff;
 }
+
+/* ── Contrast overrides — muted text on light backgrounds ─────────────────── */
+/* #7a7178 on #FAF7F4 = 3.4:1 (fails AA). Override to #4d4751 = 8.6:1 ✓      */
+.card-light .text-\[\#7a7178\],
+.bg-\[\#FAF7F4\] .text-\[\#7a7178\] {
+  color: #4d4751;
+}
+
+/* ── Accessibility ─────────────────────────────────────────────────────────── */
+details summary:focus-visible {
+  outline: 2px solid #FF6D29;
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+.neo-input:focus-visible,
+.neo-input-light:focus-visible {
+  outline: 2px solid rgba(255, 109, 41, 0.6);
+  outline-offset: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}

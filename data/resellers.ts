@@ -1,7 +1,7 @@
 import type { Reseller } from "@/lib/types";
 
 export const resellers: Reseller[] = [
-  // Lusaka
+  // ── Lusaka ────────────────────────────────────────────────────────────────
   {
     id: "r001",
     name: "Telefonika",
@@ -37,7 +37,7 @@ export const resellers: Reseller[] = [
   },
   {
     id: "r005",
-    name: "Hazida Bala",
+    name: "Bala Hazida",
     province: "Lusaka",
     town: "Lusaka",
     phone: "+260 97 7773789",
@@ -45,14 +45,22 @@ export const resellers: Reseller[] = [
   },
   {
     id: "r006",
-    name: "Bwalya Astrinet Enterprise",
+    name: "Astrinet Enterprise",
     province: "Lusaka",
     town: "Lusaka",
     phone: "+260 97 5279318",
     status: "active",
   },
+  {
+    id: "r009",
+    name: "Cosmic Computers",
+    province: "Lusaka",
+    town: "Lusaka",
+    phone: "+260 77 4828724",
+    status: "active",
+  },
 
-  // Copperbelt
+  // ── Copperbelt ────────────────────────────────────────────────────────────
   {
     id: "r007",
     name: "AT Computers Ltd",
@@ -67,14 +75,6 @@ export const resellers: Reseller[] = [
     province: "Copperbelt",
     town: "Kitwe",
     phone: "+260 97 7800948",
-    status: "active",
-  },
-  {
-    id: "r009",
-    name: "Rishi Cosmic Computers",
-    province: "Copperbelt",
-    town: "Kitwe",
-    phone: "+260 77 4828724",
     status: "active",
   },
 ];

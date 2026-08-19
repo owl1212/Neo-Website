@@ -15,6 +15,11 @@ export function FadeIn({
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
+  const [reduced, setReduced] = useState(false);
+
+  useEffect(() => {
+    setReduced(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  }, []);
 
   useEffect(() => {
     const el = ref.current;
@@ -43,11 +48,15 @@ export function FadeIn({
     <div
       ref={ref}
       className={className}
-      style={{
-        opacity: visible ? 1 : 0,
-        transform: translate,
-        transition: `opacity 0.65s ease ${delay}ms, transform 0.65s ease ${delay}ms`,
-      }}
+      style={
+        reduced
+          ? { opacity: 1 }
+          : {
+              opacity: visible ? 1 : 0,
+              transform: translate,
+              transition: `opacity 0.3s ease ${delay}ms, transform 0.3s ease ${delay}ms`,
+            }
+      }
     >
       {children}
     </div>

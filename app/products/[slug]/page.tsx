@@ -87,6 +87,7 @@ export default async function ProductDetailPage(props: PageProps<"/products/[slu
             playsInline
             preload="auto"
             poster={product.heroImage.src}
+            aria-hidden="true"
             className="absolute inset-0 w-full h-full object-cover"
           />
           <div
@@ -120,7 +121,7 @@ export default async function ProductDetailPage(props: PageProps<"/products/[slu
 
         <div className="relative max-w-7xl mx-auto px-5 sm:px-8 pt-10 pb-0">
           {/* Breadcrumb */}
-          <nav className="flex items-center gap-2 text-sm text-[#7a7178] mb-12">
+          <nav className="flex items-center gap-2 text-sm text-[#7a7178] mb-12" aria-label="Breadcrumb">
             <Link href="/products" className="hover:text-white transition-colors">Products</Link>
             <span>/</span>
             <span className="text-white">{product.name}</span>
@@ -193,7 +194,7 @@ export default async function ProductDetailPage(props: PageProps<"/products/[slu
 
         {/* Pricing note */}
         <div className="text-center py-5">
-          <p className="text-xs text-[#5a5158] flex items-center justify-center gap-1.5">
+          <p className="text-xs text-[#9a9096] flex items-center justify-center gap-1.5">
             <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clipRule="evenodd" />
             </svg>
@@ -234,7 +235,7 @@ export default async function ProductDetailPage(props: PageProps<"/products/[slu
                 key={spec.label}
                 className="p-6 sm:p-8 border-r border-b border-white/[0.07]"
               >
-                <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-[#5a5158] mb-3">
+                <p className="text-[11px] font-bold tracking-[0.2em] uppercase text-[#9a9096] mb-3">
                   {spec.label}
                 </p>
                 <p
@@ -301,7 +302,7 @@ export default async function ProductDetailPage(props: PageProps<"/products/[slu
                 <div className="space-y-4">
                   {displayGroup.specs.map((spec) => (
                     <div key={spec.label} className="flex items-start justify-between gap-4 border-b border-white/[0.06] pb-4">
-                      <span className="text-[11px] font-bold tracking-[0.2em] uppercase text-[#5a5158]">
+                      <span className="text-[11px] font-bold tracking-[0.2em] uppercase text-[#9a9096]">
                         {spec.label}
                       </span>
                       <span className="text-sm font-semibold text-white text-right">{spec.value}</span>
@@ -322,7 +323,7 @@ export default async function ProductDetailPage(props: PageProps<"/products/[slu
                   {displayGroup.specs[0]?.value.split(" ").slice(1).join(" ")}
                 </p>
                 {displayGroup.specs.find((s) => s.label === "Resolution") && (
-                  <p className="text-[#5a5158] text-xs mt-4 font-medium">
+                  <p className="text-[#9a9096] text-xs mt-4 font-medium">
                     {displayGroup.specs.find((s) => s.label === "Resolution")?.value}
                   </p>
                 )}
@@ -414,7 +415,7 @@ export default async function ProductDetailPage(props: PageProps<"/products/[slu
                       <ProductImage src={p.heroImage.src} alt={p.heroImage.alt} accent={a} />
                     </div>
                     <div className="p-3">
-                      <p className="text-[9px] font-bold tracking-widest uppercase mb-0.5" style={{ color: a }}>
+                      <p className="text-[10px] font-bold tracking-widest uppercase mb-0.5" style={{ color: a }}>
                         {p.range}
                       </p>
                       <p className={`text-xs font-bold transition-colors ${isCurrent ? "text-white" : "text-[#bababa] group-hover:text-white"}`}>

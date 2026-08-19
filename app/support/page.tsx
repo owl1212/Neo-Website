@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
+import { SupportForm } from "@/components/SupportForm";
 
 export const metadata: Metadata = {
   title: "Support & Warranty",
@@ -188,42 +189,7 @@ export default function SupportPage() {
             </div>
 
             <div className="lg:col-span-3">
-              <div className="card-glass rounded-[20px] p-8">
-                <h3 className="text-xl font-bold text-white mb-6">Send us a message</h3>
-                <form className="space-y-5" action="#" method="POST">
-                  <input type="text" name="_honey" className="hidden" tabIndex={-1} autoComplete="off" />
-                  <div className="grid sm:grid-cols-2 gap-5">
-                    <div>
-                      <label className="block text-xs font-semibold text-[#bababa] mb-2" htmlFor="s-name">Full name *</label>
-                      <input id="s-name" name="name" type="text" required className="neo-input" placeholder="Your name" />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-semibold text-[#bababa] mb-2" htmlFor="s-email">Email *</label>
-                      <input id="s-email" name="email" type="email" required className="neo-input" placeholder="you@email.com" />
-                    </div>
-                  </div>
-                  <div>
-                    <label className="block text-xs font-semibold text-[#bababa] mb-2" htmlFor="s-subject">Subject *</label>
-                    <select id="s-subject" name="subject" required className="neo-input">
-                      <option value="">Select subject</option>
-                      <option value="warranty">Warranty claim</option>
-                      <option value="reseller">Reseller enquiry</option>
-                      <option value="product">Product question</option>
-                      <option value="other">Other</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-xs font-semibold text-[#bababa] mb-2" htmlFor="s-message">Message *</label>
-                    <textarea id="s-message" name="message" rows={5} required className="neo-input resize-none" placeholder="Describe your issue or question..." />
-                  </div>
-                  <button type="submit" className="btn-neo w-full justify-center">
-                    Send Message
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
-                    </svg>
-                  </button>
-                </form>
-              </div>
+              <SupportForm />
             </div>
           </div>
         </div>

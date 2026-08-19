@@ -43,6 +43,7 @@ export default async function HomePage() {
           playsInline
           preload="auto"
           poster="/images/pulse-7-hero.png"
+          aria-hidden="true"
           className="absolute inset-0 w-full h-full object-cover object-center"
         />
         {/* Bottom fade into the brand section */}

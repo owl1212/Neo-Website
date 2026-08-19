@@ -35,6 +35,7 @@ export function ProductImage({ src, alt, accent = "#FF6D29", priority = false, c
       alt={alt}
       fill
       priority={priority}
+      sizes="(max-width: 640px) 33vw, (max-width: 1024px) 16vw, 160px"
       onError={() => setErrored(true)}
       className={`object-contain ${className}`}
       style={{ filter: "drop-shadow(0 24px 48px rgba(0,0,0,0.55))" }}
