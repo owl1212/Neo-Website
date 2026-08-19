@@ -42,7 +42,6 @@ export default async function HomePage() {
           loop
           playsInline
           preload="metadata"
-          poster="/images/pulse-7-hero.png"
           aria-hidden="true"
           className="absolute inset-0 w-full h-full object-cover object-center"
         />
