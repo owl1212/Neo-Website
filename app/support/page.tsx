@@ -42,7 +42,7 @@ export default function SupportPage() {
   return (
     <div className="pt-20 min-h-screen">
       {/* Hero */}
-      <div className="relative min-h-[700px] flex items-center overflow-hidden">
+      <div className="relative min-h-[480px] sm:min-h-[600px] lg:min-h-[700px] flex items-center overflow-hidden">
         <div
           className="absolute inset-0 pointer-events-none"
           style={{ background: "radial-gradient(ellipse 60% 50% at 50% 0%, rgba(255,109,41,0.15) 0%, transparent 60%)" }}
@@ -61,7 +61,7 @@ export default function SupportPage() {
             </p>
           </div>
         </div>
-        <div className="hidden lg:block absolute bottom-0 w-[1000px] h-[1050px] pointer-events-none" style={{ right: "-60px" }}>
+        <div className="hidden xl:block absolute bottom-0 w-[1000px] h-[1050px] pointer-events-none" style={{ right: "-60px" }}>
           <Image
             src="/images/Support guy.png"
             alt="NEO Support"
@@ -76,6 +76,26 @@ export default function SupportPage() {
       {/* Warranty cards [LIGHT] */}
       <section className="bg-[#FAF7F4]">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 py-16">
+
+          {/* Warranty download */}
+          <div className="flex items-center justify-between flex-wrap gap-4 mb-10 pb-8 border-b border-black/[0.06]">
+            <div>
+              <p className="text-xs font-bold tracking-[0.2em] uppercase text-[#FF6D29] mb-1">Official Document</p>
+              <h2 className="text-xl font-extrabold text-[#1a1518]">Warranty & Returns Policy</h2>
+              <p className="text-sm text-[#7a7178] mt-1">Download the full terms — 12-month coverage, returns process, and claim conditions.</p>
+            </div>
+            <a
+              href="/Specs/NEO_Warranty_Returns_Policy.pdf"
+              download
+              className="inline-flex items-center gap-3 bg-[#1a1518] text-white text-sm font-semibold px-6 py-3 rounded-full hover:bg-[#FF6D29] transition-colors duration-200 shrink-0"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+              </svg>
+              Download Warranty T&Cs
+            </a>
+          </div>
+
           <div className="grid sm:grid-cols-3 gap-5">
             {[
               {
@@ -125,14 +145,14 @@ export default function SupportPage() {
         <div className="hidden lg:block absolute bottom-0 w-[1100px] h-[1200px] pointer-events-none" style={{ left: "0px" }}>
           <Image
             src="/images/FAQ.png"
-            alt="NEO"
+            alt=""
             fill
             className="object-contain object-bottom"
             sizes="1100px"
           />
         </div>
         <div className="max-w-7xl mx-auto px-5 sm:px-8 py-20">
-          <div className="max-w-3xl ml-auto pl-80">
+          <div className="max-w-3xl ml-auto lg:pl-80">
             <div className="text-right mb-10">
               <div className="section-label inline-flex mb-6">FAQ</div>
               <h2 className="text-3xl font-extrabold text-[#1a1518]">Claims FAQ</h2>
@@ -167,24 +187,6 @@ export default function SupportPage() {
                 Reach out for warranty queries, reseller support, or general enquiries. We respond to
                 all messages within 2 business days.
               </p>
-              <div className="space-y-3">
-                <div className="flex items-center gap-3 text-sm text-[#bababa]">
-                  <div className="w-8 h-8 rounded-full bg-[rgba(255,109,41,0.15)] flex items-center justify-center text-[#FF6D29]">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
-                    </svg>
-                  </div>
-                  support@neozambia.com
-                </div>
-                <div className="flex items-center gap-3 text-sm text-[#bababa]">
-                  <div className="w-8 h-8 rounded-full bg-[rgba(255,109,41,0.15)] flex items-center justify-center text-[#FF6D29]">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
-                    </svg>
-                  </div>
-                  +260 97 NEO ZAMBIA
-                </div>
-              </div>
             </div>
 
             <div className="lg:col-span-3">

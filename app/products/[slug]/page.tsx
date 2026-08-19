@@ -38,11 +38,11 @@ const rangeHeadlines: Record<string, string> = {
 };
 
 const slugVideos: Record<string, string> = {
-  "fusion-a5": "1Cir35FxcwY",
-  "lite-14p": "9Jlz4n_Co5M",
-  "lite-14s": "d0uwEk2ltEs",
-  "pulse-5": "snMMw6MngZ0",
-  "pulse-7": "GEDId6MZq4o",
+  "fusion-a5": "/videos/fusion-a5.mp4",
+  "lite-14p": "/videos/lite-14p.mp4",
+  "lite-14s": "/videos/lite-14s.mp4",
+  "pulse-5": "/videos/pulse-5.mp4",
+  "pulse-7": "/videos/pulse-7.mp4",
 };
 
 function getHighlightStats(product: Product) {
@@ -78,16 +78,17 @@ export default async function ProductDetailPage(props: PageProps<"/products/[slu
       {/* ══════════════════════════════════════════════════════
           § 1  HERO — full-screen video
           ══════════════════════════════════════════════════════ */}
-      <section className="relative h-screen overflow-hidden bg-[#0d0b0c]">
+      <section className="relative w-full aspect-video lg:aspect-auto lg:h-screen overflow-hidden bg-[#0d0b0c]">
         <VideoHero
-          videoId={videoSrc}
+          videoSrc={videoSrc}
           fallbackImage={product.heroImage}
+          className="absolute inset-0 w-full h-full object-cover"
         />
         <div
-          className="absolute bottom-0 left-0 right-0 h-48 pointer-events-none"
+          className="absolute bottom-0 left-0 right-0 h-12 lg:h-48 pointer-events-none"
           style={{ background: "linear-gradient(to top, #0d0b0c 0%, transparent 100%)" }}
         />
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 opacity-50">
+        <div className="hidden lg:block absolute bottom-8 left-1/2 -translate-x-1/2 opacity-50">
           <div className="w-px h-10 bg-gradient-to-b from-[#FF6D29] to-transparent mx-auto" />
         </div>
       </section>
@@ -106,7 +107,7 @@ export default async function ProductDetailPage(props: PageProps<"/products/[slu
 
         <div className="relative max-w-7xl mx-auto px-5 sm:px-8 pt-10 pb-0">
           {/* Breadcrumb */}
-          <nav className="flex items-center gap-2 text-sm text-[#7a7178] mb-12">
+          <nav className="flex items-center gap-2 text-sm text-[#7a7178] mb-12" aria-label="Breadcrumb">
             <Link href="/products" className="hover:text-white transition-colors">Products</Link>
             <span>/</span>
             <span className="text-white">{product.name}</span>
@@ -122,7 +123,7 @@ export default async function ProductDetailPage(props: PageProps<"/products/[slu
             </span>
             <h1
               className="font-extrabold text-white leading-[1.0] tracking-tight mb-4"
-              style={{ fontSize: "clamp(52px, 9vw, 120px)" }}
+              style={{ fontSize: "clamp(40px, 9vw, 120px)" }}
             >
               {product.name}
             </h1>
@@ -151,7 +152,7 @@ export default async function ProductDetailPage(props: PageProps<"/products/[slu
           </div>
 
           {/* Hero product image — large, full-width */}
-          <div className="relative w-full" style={{ height: "clamp(320px, 55vw, 760px)" }}>
+          <div className="relative w-full" style={{ height: product.range === "Tab" ? "clamp(180px, 38vw, 520px)" : "clamp(220px, 55vw, 760px)" }}>
             <div
               className="absolute inset-0 flex items-center justify-center pointer-events-none"
               aria-hidden
@@ -170,7 +171,7 @@ export default async function ProductDetailPage(props: PageProps<"/products/[slu
               src={product.heroImage.src}
               alt={product.heroImage.alt}
               fill
-              className="object-contain"
+              className={`object-contain ${product.range === "Tab" ? "scale-[0.6]" : ""}`}
               sizes="100vw"
               priority
             />
@@ -179,7 +180,7 @@ export default async function ProductDetailPage(props: PageProps<"/products/[slu
 
         {/* Pricing note */}
         <div className="text-center py-5">
-          <p className="text-xs text-[#5a5158] flex items-center justify-center gap-1.5">
+          <p className="text-xs text-[#9a9096] flex items-center justify-center gap-1.5">
             <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clipRule="evenodd" />
             </svg>
@@ -214,17 +215,13 @@ export default async function ProductDetailPage(props: PageProps<"/products/[slu
           </div>
 
           {/* Stat callouts */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-0 border border-white/[0.07] rounded-2xl overflow-hidden">
+          <div className="grid grid-cols-2 lg:grid-cols-4 rounded-2xl overflow-hidden border border-white/[0.07]">
             {highlightStats.map((spec, i) => (
               <div
                 key={spec.label}
-                className="p-6 sm:p-8 border-white/[0.07]"
-                style={{
-                  borderRight: i < highlightStats.length - 1 ? "1px solid rgba(255,255,255,0.07)" : undefined,
-                  borderBottom: i < 2 ? "1px solid rgba(255,255,255,0.07)" : undefined,
-                }}
+                className="p-6 sm:p-8 border-r border-b border-white/[0.07]"
               >
-                <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-[#5a5158] mb-3">
+                <p className="text-[11px] font-bold tracking-[0.2em] uppercase text-[#9a9096] mb-3">
                   {spec.label}
                 </p>
                 <p
@@ -291,7 +288,7 @@ export default async function ProductDetailPage(props: PageProps<"/products/[slu
                 <div className="space-y-4">
                   {displayGroup.specs.map((spec) => (
                     <div key={spec.label} className="flex items-start justify-between gap-4 border-b border-white/[0.06] pb-4">
-                      <span className="text-[11px] font-bold tracking-[0.2em] uppercase text-[#5a5158]">
+                      <span className="text-[11px] font-bold tracking-[0.2em] uppercase text-[#9a9096]">
                         {spec.label}
                       </span>
                       <span className="text-sm font-semibold text-white text-right">{spec.value}</span>
@@ -304,7 +301,7 @@ export default async function ProductDetailPage(props: PageProps<"/products/[slu
               <div className="text-center">
                 <p
                   className="font-extrabold leading-none"
-                  style={{ color: accent, fontSize: "clamp(80px, 18vw, 200px)" }}
+                  style={{ color: accent, fontSize: "clamp(48px, 14vw, 200px)" }}
                 >
                   {displayGroup.specs[0]?.value.split(" ")[0]}
                 </p>
@@ -312,7 +309,7 @@ export default async function ProductDetailPage(props: PageProps<"/products/[slu
                   {displayGroup.specs[0]?.value.split(" ").slice(1).join(" ")}
                 </p>
                 {displayGroup.specs.find((s) => s.label === "Resolution") && (
-                  <p className="text-[#5a5158] text-xs mt-4 font-medium">
+                  <p className="text-[#9a9096] text-xs mt-4 font-medium">
                     {displayGroup.specs.find((s) => s.label === "Resolution")?.value}
                   </p>
                 )}
@@ -404,7 +401,7 @@ export default async function ProductDetailPage(props: PageProps<"/products/[slu
                       <ProductImage src={p.heroImage.src} alt={p.heroImage.alt} accent={a} />
                     </div>
                     <div className="p-3">
-                      <p className="text-[9px] font-bold tracking-widest uppercase mb-0.5" style={{ color: a }}>
+                      <p className="text-[10px] font-bold tracking-widest uppercase mb-0.5" style={{ color: a }}>
                         {p.range}
                       </p>
                       <p className={`text-xs font-bold transition-colors ${isCurrent ? "text-white" : "text-[#bababa] group-hover:text-white"}`}>

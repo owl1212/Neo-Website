@@ -99,7 +99,7 @@ export function ProductSlider({ products }: { products: Product[] }) {
             <div className="grid grid-cols-2 gap-3 mb-8">
               {keySpecs.map((spec) => (
                 <div key={spec.label} className="bg-white/[0.04] rounded-xl p-4 border border-white/5">
-                  <p className="text-[10px] font-semibold tracking-widest uppercase text-[#7a7178] mb-1">
+                  <p className="text-[11px] font-semibold tracking-widest uppercase text-[#9a9096] mb-1">
                     {spec.label}
                   </p>
                   <p className="text-sm font-semibold text-white leading-tight">{spec.value}</p>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { Product } from "@/lib/types";
@@ -16,11 +16,13 @@ export function ProductCarousel({ products }: { products: Product[] }) {
   const [center, setCenter] = useState(0);
   const [fading, setFading] = useState(false);
   const [paused, setPaused] = useState(false);
+  const touchStartX = useRef<number | null>(null);
   const n = products.length;
 
   useEffect(() => {
     if (paused) return;
-    const id = setInterval(() => doNavigate("right"), 2000);
+    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const id = setInterval(() => doNavigate("right"), 4500);
     return () => clearInterval(id);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paused, center, n]);
@@ -39,6 +41,16 @@ export function ProductCarousel({ products }: { products: Product[] }) {
     doNavigate(dir);
   }
 
+  function navigateTo(index: number) {
+    if (fading || index === center) return;
+    setPaused(true);
+    setFading(true);
+    setTimeout(() => {
+      setCenter(index);
+      setFading(false);
+    }, 200);
+  }
+
   const prev = (center - 1 + n) % n;
   const next = (center + 1) % n;
 
@@ -54,29 +66,34 @@ export function ProductCarousel({ products }: { products: Product[] }) {
     <div
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
+      onTouchStart={(e) => {
+        setPaused(true);
+        touchStartX.current = e.touches[0].clientX;
+      }}
+      onTouchEnd={(e) => {
+        if (touchStartX.current === null) return;
+        const diff = touchStartX.current - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) navigate(diff > 0 ? "right" : "left");
+        touchStartX.current = null;
+      }}
       className="flex flex-col items-center"
     >
+      {/* Screen-reader live region */}
+      <p className="sr-only" aria-live="polite" aria-atomic="true">
+        {products[center].name}
+      </p>
+
       {/* Three-panel stage */}
       <div
-        className="w-full grid grid-cols-[1fr_1.7fr_1fr] items-end gap-2 sm:gap-4"
+        className="w-full grid grid-cols-[0.6fr_1.7fr_0.6fr] sm:grid-cols-[1fr_1.7fr_1fr] items-end gap-2 sm:gap-4"
         style={{ opacity: fading ? 0 : 1, transition: "opacity 0.2s ease" }}
       >
         {slots.map(({ product, role }) => {
           const accent = rangeAccents[product.range ?? "Fusion"] ?? "#FF6D29";
           const isCenter = role === "center";
 
-          return (
-            <div
-              key={`${role}-${product.slug}`}
-              className={`flex flex-col items-center transition-all duration-300 ${
-                isCenter ? "" : "cursor-pointer opacity-40 hover:opacity-60"
-              }`}
-              onClick={
-                !isCenter
-                  ? () => navigate(role === "left" ? "left" : "right")
-                  : undefined
-              }
-            >
+          const inner = (
+            <>
               <div
                 className={`relative w-full ${
                   isCenter
@@ -102,7 +119,7 @@ export function ProductCarousel({ products }: { products: Product[] }) {
                   src={product.heroImage.src}
                   alt={product.heroImage.alt}
                   fill
-                  className="object-contain"
+                  className={`object-contain ${product.range === "Tab" ? "scale-[0.7]" : ""}`}
                   style={isCenter ? { animation: "floatProduct 3.8s ease-in-out infinite" } : undefined}
                   sizes={
                     isCenter
@@ -115,7 +132,7 @@ export function ProductCarousel({ products }: { products: Product[] }) {
               <div className="text-center mt-4 mb-2">
                 <p
                   className={`font-extrabold text-white leading-tight ${
-                    isCenter ? "text-xl sm:text-2xl" : "text-sm sm:text-base"
+                    isCenter ? "text-xl sm:text-2xl" : "hidden sm:block text-sm sm:text-base"
                   }`}
                 >
                   {product.name}
@@ -123,7 +140,7 @@ export function ProductCarousel({ products }: { products: Product[] }) {
                 {isCenter ? (
                   <Link
                     href={`/products/${product.slug}`}
-                    className="inline-flex items-center gap-1.5 text-[10px] font-bold tracking-[0.22em] uppercase mt-2"
+                    className="inline-flex items-center gap-1.5 text-[11px] font-bold tracking-[0.22em] uppercase mt-1 py-2 px-1 -mx-1"
                     style={{ color: accent }}
                   >
                     Explore
@@ -132,12 +149,34 @@ export function ProductCarousel({ products }: { products: Product[] }) {
                     </svg>
                   </Link>
                 ) : (
-                  <p className="text-[10px] font-bold tracking-[0.22em] uppercase text-[#5a5158] mt-2">
+                  <p className="hidden sm:block text-[11px] font-bold tracking-[0.22em] uppercase text-[#9a9096] mt-1 py-2" aria-hidden>
                     Explore
                   </p>
                 )}
               </div>
-            </div>
+            </>
+          );
+
+          if (isCenter) {
+            return (
+              <div
+                key={`${role}-${product.slug}`}
+                className="flex flex-col items-center transition-all duration-300"
+              >
+                {inner}
+              </div>
+            );
+          }
+
+          return (
+            <button
+              key={`${role}-${product.slug}`}
+              className="flex flex-col items-center transition-all duration-300 opacity-40 hover:opacity-60 cursor-pointer"
+              onClick={() => navigate(role === "left" ? "left" : "right")}
+              aria-label={`View ${product.name}`}
+            >
+              {inner}
+            </button>
           );
         })}
       </div>
@@ -147,17 +186,21 @@ export function ProductCarousel({ products }: { products: Product[] }) {
         <button
           onClick={() => navigate("left")}
           aria-label="Previous product"
-          className="w-10 h-10 rounded-full flex items-center justify-center border border-white/10 text-[#7a7178] hover:border-[rgba(255,109,41,0.5)] hover:text-[#FF6D29] transition-all duration-200"
+          className="w-11 h-11 rounded-full flex items-center justify-center border border-white/10 text-[#7a7178] hover:border-[rgba(255,109,41,0.5)] hover:text-[#FF6D29] transition-all duration-200"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18" />
           </svg>
         </button>
 
-        <div className="flex gap-1.5">
-          {products.map((_, i) => (
-            <span
+        <div className="flex gap-1.5" role="tablist" aria-label="Products">
+          {products.map((p, i) => (
+            <button
               key={i}
+              role="tab"
+              aria-selected={i === center}
+              aria-label={p.name}
+              onClick={() => navigateTo(i)}
               className="rounded-full transition-all duration-300"
               style={{
                 width: i === center ? "18px" : "6px",
@@ -171,7 +214,7 @@ export function ProductCarousel({ products }: { products: Product[] }) {
         <button
           onClick={() => navigate("right")}
           aria-label="Next product"
-          className="w-10 h-10 rounded-full flex items-center justify-center border border-white/10 text-[#7a7178] hover:border-[rgba(255,109,41,0.5)] hover:text-[#FF6D29] transition-all duration-200"
+          className="w-11 h-11 rounded-full flex items-center justify-center border border-white/10 text-[#7a7178] hover:border-[rgba(255,109,41,0.5)] hover:text-[#FF6D29] transition-all duration-200"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
@@ -179,7 +222,7 @@ export function ProductCarousel({ products }: { products: Product[] }) {
         </button>
       </div>
 
-      <p className="mt-6 text-[10px] sm:text-[11px] font-bold tracking-[0.28em] uppercase text-[#5a5158] text-center">
+      <p className="mt-6 text-[11px] font-bold tracking-[0.28em] uppercase text-[#9a9096] text-center">
         Find your style in three distinctive collections
       </p>
     </div>
