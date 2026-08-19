@@ -44,7 +44,7 @@ export default async function ProductsPage() {
           muted
           loop
           playsInline
-          preload="auto"
+          preload="metadata"
           poster="/images/fusion-a5-hero.png"
           aria-hidden="true"
           className="absolute inset-0 w-full h-full object-cover"

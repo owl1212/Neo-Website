@@ -163,6 +163,15 @@ body {
   color: #7a7178;
 }
 
+select.neo-input {
+  color-scheme: dark;
+}
+
+.neo-input option {
+  background: #161316;
+  color: #ffffff;
+}
+
 /* Divider with orange glow */
 .neo-divider {
   height: 1px;

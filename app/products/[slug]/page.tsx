@@ -85,7 +85,7 @@ export default async function ProductDetailPage(props: PageProps<"/products/[slu
             muted
             loop
             playsInline
-            preload="auto"
+            preload="metadata"
             poster={product.heroImage.src}
             aria-hidden="true"
             className="absolute inset-0 w-full h-full object-cover"

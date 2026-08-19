@@ -145,7 +145,7 @@ export default function SupportPage() {
         <div className="hidden lg:block absolute bottom-0 w-[1100px] h-[1200px] pointer-events-none" style={{ left: "0px" }}>
           <Image
             src="/images/FAQ.png"
-            alt="NEO"
+            alt=""
             fill
             className="object-contain object-bottom"
           />

@@ -111,7 +111,7 @@ export default function Nav() {
           <div className="flex items-center gap-3">
             <Link
               href="/become-a-reseller"
-              className="hidden sm:inline-flex btn-neo text-sm py-2.5 px-5"
+              className="hidden sm:inline-flex btn-neo text-sm py-3 px-5"
             >
               Partner With Us
             </Link>
