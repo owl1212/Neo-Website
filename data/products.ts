@@ -16,7 +16,7 @@ export const products: Product[] = [
       { src: "/images/fusion-a5-hero.png", alt: "NEO Fusion A5 front view", type: "product" },
       { src: "/images/fusion-a5-back.png", alt: "NEO Fusion A5 back view", type: "product" },
     ],
-    specSheetPdf: { src: "/Specs/Neo Fusion A5-Spec Brochure.pdf", label: "Download Spec Sheet" },
+    specSheetPdf: { src: "/Specs/neo-fusion-a5.pdf", label: "Download Spec Sheet" },
     status: "published",
     specGroups: [
       {
@@ -72,7 +72,7 @@ export const products: Product[] = [
     gallery: [
       { src: "/images/lite-14p-hero.png", alt: "NEO Lite 14P open front view", type: "product" },
     ],
-    specSheetPdf: { src: "/Specs/Neo Lite14P-Spec Brochure.pdf", label: "Download Spec Sheet" },
+    specSheetPdf: { src: "/Specs/neo-lite-14p.pdf", label: "Download Spec Sheet" },
     status: "published",
     specGroups: [
       {
@@ -87,7 +87,7 @@ export const products: Product[] = [
       {
         label: "Performance",
         specs: [
-          { label: "Processor", value: "Intel Core i3" },
+          { label: "Processor", value: "Intel Core i5" },
           { label: "RAM", value: "8 GB DDR4" },
           { label: "Storage", value: "512 GB SSD" },
         ],
@@ -106,7 +106,7 @@ export const products: Product[] = [
       {
         label: "General",
         specs: [
-          { label: "OS", value: "Windows 11 Pro" },
+          { label: "OS", value: "Windows 11 Home" },
           { label: "Battery", value: "Up to 8 hours" },
           { label: "Webcam", value: "Built-in HD webcam" },
           { label: "Color", value: "Silver" },
@@ -129,7 +129,7 @@ export const products: Product[] = [
       { src: "/images/lite-14s-hero.png", alt: "NEO Lite 14S open front view", type: "product" },
       { src: "/images/lite-14s-front.png", alt: "NEO Lite 14S angled view", type: "product" },
     ],
-    specSheetPdf: { src: "/Specs/Neo Lite14S-Spec Brochure.pdf", label: "Download Spec Sheet" },
+    specSheetPdf: { src: "/Specs/neo-lite-14s.pdf", label: "Download Spec Sheet" },
     status: "published",
     specGroups: [
       {
@@ -185,7 +185,7 @@ export const products: Product[] = [
     gallery: [
       { src: "/images/pulse-5-hero.png", alt: "NEO Pulse 5 side view", type: "product" },
     ],
-    specSheetPdf: { src: "/Specs/Neo Pulse 5-Spec Brochure.pdf", label: "Download Spec Sheet" },
+    specSheetPdf: { src: "/Specs/neo-pulse-5.pdf", label: "Download Spec Sheet" },
     status: "published",
     specGroups: [
       {
@@ -242,7 +242,7 @@ export const products: Product[] = [
       { src: "/images/pulse-7-hero.png", alt: "NEO Pulse 7 front view", type: "product" },
       { src: "/images/pulse-7-back.png", alt: "NEO Pulse 7 back view", type: "product" },
     ],
-    specSheetPdf: { src: "/Specs/Neo Pulse 7-Spec Brochure.pdf", label: "Download Spec Sheet" },
+    specSheetPdf: { src: "/Specs/neo-pulse-7.pdf", label: "Download Spec Sheet" },
     status: "published",
     specGroups: [
       {
@@ -276,7 +276,7 @@ export const products: Product[] = [
       {
         label: "General",
         specs: [
-          { label: "OS", value: "Windows 11 Pro" },
+          { label: "OS", value: "Windows 11 Home" },
           { label: "Battery", value: "Up to 8 hours" },
           { label: "Webcam", value: "Built-in HD webcam" },
           { label: "Color", value: "Silver" },
@@ -300,7 +300,7 @@ export const products: Product[] = [
       { src: "/images/tab-t606-hero.png", alt: "NEO Tab T606 angled view", type: "product" },
       { src: "/images/tab-t606-back.png", alt: "NEO Tab T606 back view", type: "product" },
     ],
-    specSheetPdf: { src: "/Specs/Neo Tab606 Brochure.pdf", label: "Download Spec Sheet" },
+    specSheetPdf: { src: "/Specs/neo-tab-t606.pdf", label: "Download Spec Sheet" },
     status: "published",
     specGroups: [
       {
@@ -314,7 +314,7 @@ export const products: Product[] = [
       {
         label: "Performance",
         specs: [
-          { label: "Processor", value: "UniSOC T606 (Octa-core, 1.6 GHz)" },
+          { label: "Processor", value: "Octa-Core processor" },
           { label: "RAM", value: "4 GB LPDDR4" },
           { label: "Storage", value: "128 GB" },
           { label: "Expandable", value: "Up to 1 TB (microSD)" },

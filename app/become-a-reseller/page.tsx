@@ -151,13 +151,6 @@ export default function BecomeAResellerPage() {
               ))}
             </ul>
 
-            <div className="card-glass rounded-[16px] p-5">
-              <p className="text-xs font-semibold tracking-widest uppercase text-[#FF6D29] mb-2">Note</p>
-              <p className="text-sm text-[#7a7178] leading-relaxed">
-                The reseller application is public and free. A login-gated partner portal
-                (brand assets, training, approved imagery) is coming in Phase 2 for approved resellers.
-              </p>
-            </div>
           </div>
 
           {/* Application form */}
