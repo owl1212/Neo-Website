@@ -80,7 +80,7 @@ export default async function HomePage() {
             </p>
             <p className="text-lg sm:text-xl text-[#bababa] leading-relaxed max-w-xl mb-12 animate-fade-in-up delay-300">
               You know the feeling — a device that wasn&apos;t built with you in mind. NEO is different.
-              Laptops, monitors, and tablets engineered from the ground up for how Zambians
+              Laptops, All-In-One PCs, and tablets engineered from the ground up for how Zambians
               actually work, learn, and live.
             </p>
             <div className="flex flex-wrap gap-4 justify-center animate-fade-in-up delay-400">
@@ -136,8 +136,7 @@ export default async function HomePage() {
               <div className="space-y-5 text-[#4a3f46] leading-relaxed">
                 <p>
                   For years, Zambians have had to choose between costly imports and hardware
-                  that was never built with local life in mind — our power situation, our
-                  climate, our ambitions.
+                  that was never built with local life in mind — our climate, our ambitions.
                 </p>
                 <p>
                   NEO changes that. This is {"Zambia's"} first laptop brand: real specs, honest

@@ -61,7 +61,7 @@ export default function SupportPage() {
             </p>
           </div>
         </div>
-        <div className="hidden lg:block absolute bottom-0 w-[1000px] h-[1050px] pointer-events-none" style={{ right: "-60px" }}>
+        <div className="hidden xl:block absolute bottom-0 w-[1000px] h-[1050px] pointer-events-none" style={{ right: "-60px" }}>
           <Image
             src="/images/Support guy.png"
             alt="NEO Support"
