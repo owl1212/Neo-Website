@@ -3,6 +3,7 @@ import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
+import { GoogleTag } from "@/components/GoogleTag";
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -47,6 +48,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <Nav />
         <main id="main-content" className="flex-1">{children}</main>
         <Footer />
+        <GoogleTag />
       </body>
     </html>
   );

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { postToBackend, BackendError } from "@/lib/backend";
+import { trackConversion } from "@/lib/gtag";
 
 // Subject values match the Go backend's type enum exactly
 // (warranty | reseller | product | other) — sent through as-is.
@@ -92,6 +93,7 @@ export function ContactForm() {
         message: data.get("message"),
       });
       setStatus("success");
+      trackConversion("contact");
       form.reset();
     } catch (err) {
       setStatus("error");

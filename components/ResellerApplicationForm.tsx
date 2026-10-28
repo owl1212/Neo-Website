@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { postToBackend, BackendError } from "@/lib/backend";
+import { trackConversion } from "@/lib/gtag";
 
 const provinces = [
   "Central", "Copperbelt", "Eastern", "Luapula", "Lusaka",
@@ -112,6 +113,7 @@ export function ResellerApplicationForm() {
         message: data.get("message"),
       });
       setStatus("success");
+      trackConversion("resellerApplication");
       form.reset();
     } catch (err) {
       setStatus("error");
