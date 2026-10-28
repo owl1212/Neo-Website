@@ -21,25 +21,27 @@ const sendTimeout = 15 * time.Second
 
 // Mailer sends notification emails over Gmail SMTP.
 type Mailer struct {
-	host        string
-	port        string
-	user        string
-	pass        string
-	notifyEmail string
+	host          string
+	port          string
+	user          string
+	pass          string
+	resellerEmail string
+	supportEmail  string
 }
 
 // New builds a Mailer from config.Config's SMTP fields.
 func New(cfg *config.Config) *Mailer {
 	return &Mailer{
-		host:        cfg.SMTPHost,
-		port:        cfg.SMTPPort,
-		user:        cfg.SMTPUser,
-		pass:        cfg.SMTPPass,
-		notifyEmail: cfg.NotifyEmail,
+		host:          cfg.SMTPHost,
+		port:          cfg.SMTPPort,
+		user:          cfg.SMTPUser,
+		pass:          cfg.SMTPPass,
+		resellerEmail: cfg.ResellerNotifyEmail,
+		supportEmail:  cfg.SupportNotifyEmail,
 	}
 }
 
-// NotifyReseller emails NotifyEmail when a new reseller application is submitted.
+// NotifyReseller emails the reseller inbox when a new reseller application is submitted.
 func (m *Mailer) NotifyReseller(app *models.ResellerApplication) error {
 	subject := fmt.Sprintf("New reseller application: %s", app.CompanyName)
 	body := buildHTMLEmail("New Reseller Application", []fieldRow{
@@ -51,10 +53,12 @@ func (m *Mailer) NotifyReseller(app *models.ResellerApplication) error {
 		{"Town", app.Town},
 		{"Business type", app.BusinessType},
 	}, app.Message)
-	return m.send(subject, body)
+	return m.send(m.resellerEmail, subject, body)
 }
 
-// NotifyContact emails NotifyEmail when a new contact/warranty submission is received.
+// NotifyContact emails the support inbox when a new contact/warranty
+// submission is received — except "reseller" enquiries, which go to the
+// reseller inbox alongside formal applications.
 func (m *Mailer) NotifyContact(sub *models.ContactSubmission) error {
 	subject := fmt.Sprintf("New %s submission from %s", sub.Type, sub.Name)
 	body := buildHTMLEmail("New Contact Submission", []fieldRow{
@@ -63,7 +67,11 @@ func (m *Mailer) NotifyContact(sub *models.ContactSubmission) error {
 		{"Phone", sub.Phone},
 		{"Type", sub.Type},
 	}, sub.Message)
-	return m.send(subject, body)
+	to := m.supportEmail
+	if sub.Type == "reseller" {
+		to = m.resellerEmail
+	}
+	return m.send(to, subject, body)
 }
 
 // fieldRow is one label/value line in a notification email's summary table.
@@ -132,7 +140,7 @@ func escapeMultiline(s string) string {
 	return strings.ReplaceAll(html.EscapeString(s), "\n", "<br>")
 }
 
-func (m *Mailer) send(subject, body string) error {
+func (m *Mailer) send(to, subject, body string) error {
 	addr := m.host + ":" + m.port
 
 	conn, err := net.DialTimeout("tcp", addr, sendTimeout)
@@ -168,7 +176,7 @@ func (m *Mailer) send(subject, body string) error {
 	if err := client.Mail(m.user); err != nil {
 		return fmt.Errorf("mailer: mail from: %w", err)
 	}
-	if err := client.Rcpt(m.notifyEmail); err != nil {
+	if err := client.Rcpt(to); err != nil {
 		return fmt.Errorf("mailer: rcpt to: %w", err)
 	}
 
@@ -176,7 +184,7 @@ func (m *Mailer) send(subject, body string) error {
 	if err != nil {
 		return fmt.Errorf("mailer: data: %w", err)
 	}
-	if _, err := w.Write(buildMessage(m.user, m.notifyEmail, subject, body)); err != nil {
+	if _, err := w.Write(buildMessage(m.user, to, subject, body)); err != nil {
 		w.Close()
 		return fmt.Errorf("mailer: write: %w", err)
 	}
